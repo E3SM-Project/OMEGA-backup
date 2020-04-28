@@ -98,6 +98,9 @@ module mpaso_cpl_indices
   integer :: index_x2o_Faxa_dstdry4    ! flux: Size 4 dust -- dry deposition
   integer :: index_x2o_Foxx_rofl       ! river runoff flux                (kg/m2/s)
   integer :: index_x2o_Foxx_rofi       ! ice runoff flux                  (kg/m2/s)
+  integer :: index_x2o_Sw_Sxx          ! wave radiation stress
+  integer :: index_x2o_Sw_Sxy          ! wave radiation stress
+  integer :: index_x2o_Sw_Syy          ! wave radiation stress
 
   ! drv -> glc and internal drv fields
 
@@ -258,6 +261,10 @@ contains
     index_x2o_Sg_icemask = mct_avect_indexra(x2o,'Sg_icemask')
     index_x2o_Sg_icemask = mct_avect_indexra(x2o,'Sg_icemask_grounded')
     index_x2o_Sg_icemask = mct_avect_indexra(x2o,'Sg_icemask_floating')
+
+    index_x2o_Sw_Sxx        = mct_avect_indexra(x2o,'Sw_Sxx')
+    index_x2o_Sw_Sxy        = mct_avect_indexra(x2o,'Sw_Sxy')
+    index_x2o_Sw_Syy        = mct_avect_indexra(x2o,'Sw_Syy')
 
     call mct_aVect_clean(x2o)
     call mct_aVect_clean(o2x)

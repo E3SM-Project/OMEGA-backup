@@ -51,4 +51,5 @@
 	url = git@github.com:E3SM-Project/GOTMcode.git
 [submodule "components/ww3/src/source/WW3"]
 	path = components/ww3/src/source/WW3
-	url = git@github.com:NOAA-EMC/WW3.git
+	url = git@github.com:sbrus89/WW3.git
+        branch = global_unstr 

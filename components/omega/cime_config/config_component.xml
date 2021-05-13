@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet type="text/xsl" href="definitions_variables.xsl" ?>
+
+<definitions_variables>
+
+  <entry id="COMP_OCN">
+    <type>char</type>
+    <valid_values>omega</valid_values>
+    <default_value>omega</default_value>
+    <group>case_comp</group>
+    <file>env_case.xml</file>
+    <desc>Name of ocean component</desc>
+  </entry>
+
+  <entry id="OMEGA_FORCING">
+        <type>char</type>
+        <valid_values>active_atm,datm_forced</valid_values>
+        <default_value>active_atm</default_value>
+        <values>
+           <value compset="OMEGA_">active_atm</value>
+           <value compset="_OMEGA%.*DATMFORCED">datm_forced</value>
+        </values>
+        <group>case_comp</group>
+        <file>env_case.xml</file>
+        <desc>Option to describe the OMEGA surface forcing</desc>
+  </entry>
+
+  <entry id="OMEGA_ICEBERG">
+        <type>char</type>
+        <valid_values>false,true</valid_values>
+        <default_value>false</default_value>
+        <values>
+           <value compset="OMEGA_">false</value>
+           <value compset="_OMEGA%.*IB">true</value>
+        </values>
+        <group>case_comp</group>
+        <file>env_case.xml</file>
+        <desc>Option to describe the OMEGA iceberg coupling</desc>
+  </entry>
+
+  <entry id="OMEGA_ISMF">
+        <type>char</type>
+        <valid_values>none,internal,coupled</valid_values>
+        <default_value>none</default_value>
+        <values>
+           <value compset="OMEGA_">none</value>
+           <value compset="_OMEGA%.*ISMF.*_SGLC">internal</value>
+           <value compset="_OMEGA%.*ISMF.*_MALI">coupled</value>
+        </values>
+        <group>case_comp</group>
+        <file>env_case.xml</file>
+        <desc>Option to describe how OMEGA will handle ice shelf melt fluxes</desc>
+  </entry>
+
+  <entry id="OMEGA_BGC">
+        <type>char</type>
+        <valid_values></valid_values>
+        <default_value>no_bgc</default_value>
+        <values>
+           <value compset="OMEGA_">no_bgc</value>
+           <value compset="_OMEGA%OECO">eco_only</value>
+           <value compset="_OMEGA%OECOODMS">eco_and_dms</value>
+           <value compset="_OMEGA%OECOODOC">eco_and_macromolecules</value>
+           <value compset="_OMEGA%OECOODMSODOC">eco_and_dms_and_macromolecules</value>
+           <value compset="_OMEGA%OIECO">eco_only</value>
+           <value compset="_OMEGA%OIECOOIDMS">eco_and_dms</value>
+           <value compset="_OMEGA%OIECOOIDOC">eco_and_macromolecules</value>
+           <value compset="_OMEGA%OIECOOIDMSOIDOC">eco_and_dms_and_macromolecules</value>
+           <value compset="_OMEGA%TOIECO">eco_only</value>
+        </values>
+        <group>case_comp</group>
+        <file>env_case.xml</file>
+        <desc>Option to enable the ecosystem model within OMEGA</desc>
+ </entry>
+
+  <entry id="OCN_CO2_TYPE">
+        <type>char</type>
+        <valid_values>none,constant,prognostic,diagnostic,bcrc,bcrd,bdrc,bdrd</valid_values>
+        <default_value>constant</default_value>
+        <values>
+           <value compset="OMEGA_">none</value>
+           <value compset="2000_DATM.*_OMEGA%OECO">constant</value>
+           <value compset="1850_DATM.*_OMEGA%OECO">constant</value>
+           <value compset="20TR_DATM.*_OMEGA%OECO">diagnostic</value>
+           <value compset="2000_DATM.*_OMEGA%OIECO">constant</value>
+           <value compset="1850_DATM.*_OMEGA%OIECO">constant</value>
+           <value compset="20TR_DATM.*_OMEGA%OIECO">diagnostic</value>
+           <value compset="2000_EAM.*_OMEGA%OIECO">constant</value>
+           <value compset="1850_EAM.*_OMEGA%OIECO">constant</value>
+           <value compset="20TR_EAM.*_OMEGA%OIECO.*_BGC%BCRC">bcrc</value>
+           <value compset="20TR_EAM.*_OMEGA%OIECO.*_BGC%BCRD">bcrd</value>
+           <value compset="20TR_EAM.*_OMEGA%OIECO.*_BGC%BDRC">bdrc</value>
+           <value compset="20TR_EAM.*_OMEGA%OIECO.*_BGC%BDRD">bdrd</value>
+           <value compset="SSP585_EAM.*_OMEGA%OIECO.*_BGC%BCRC">bcrc</value>
+           <value compset="SSP585_EAM.*_OMEGA%OIECO.*_BGC%BCRD">bcrd</value>
+           <value compset="SSP585_EAM.*_OMEGA%OIECO.*_BGC%BDRC">bdrc</value>
+           <value compset="SSP585_EAM.*_OMEGA%OIECO.*_BGC%BDRD">bdrd</value>
+        </values>
+        <group>case_comp</group>
+        <file>env_case.xml</file>
+        <desc>Option to specify how atmospheric CO2 is set in OMEGA</desc>
+ </entry>
+
+  <entry id="MPASI_BGC">
+        <type>char</type>
+        <valid_values></valid_values>
+        <default_value>no_ice_bgc</default_value>
+        <values>
+           <value compset="OMEGA_">no_ice_bgc</value>
+           <value compset="_OMEGA%OECO">no_ice_bgc</value>
+           <value compset="_OMEGA%OECOODMS">no_ice_bgc</value>
+           <value compset="_OMEGA%OECOODOC">no_ice_bgc</value>
+           <value compset="_OMEGA%OECOODMSODOC">no_ice_bgc</value>
+           <value compset="_OMEGA%OIECO">ice_bgc</value>
+           <value compset="_OMEGA%OIECOOIDMS">ice_bgc</value>
+           <value compset="_OMEGA%OIECOOIDOC">ice_bgc</value>
+           <value compset="_OMEGA%OIECOOIDMSOIDOC">ice_bgc</value>
+        </values>
+        <group>case_comp</group>
+        <file>env_case.xml</file>
+        <desc>Option to couple ocean bgc with sea ice bgc</desc>
+ </entry>
+
+  <description>
+    <desc compset="_OMEGA">mpas ocean default:</desc>
+  </description>
+
+  <help>
+    =========================================
+    OMEGA naming conventions
+    =========================================
+  </help>
+
+</definitions_variables>

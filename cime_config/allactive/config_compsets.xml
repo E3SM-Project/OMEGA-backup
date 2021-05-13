@@ -17,7 +17,7 @@
     ATM  = [EAM, SATM]
     LND  = [ELM,  SLND]
     ICE  = [MPASSI, CICE, DICE, SICE]
-    OCN  = [MPASO, DOCN, SOCN]
+    OCN  = [OMEGA, MPASO, DOCN, SOCN]
     ROF  = [MOSART, SROF]
     GLC  = [MALI, SGLC]
     WAV  = [DWAV, XWAV, SWAV]
@@ -50,8 +50,18 @@
 </compset>
 
 <compset>
+  <alias>WCYCL1850_OMEGA</alias>
+  <lname>1850SOI_EAM%CMIP6_ELM%SPBC_MPASSI_OMEGA_MOSART_SGLC_SWAV</lname>
+</compset>
+
+<compset>
   <alias>WCYCL1950</alias>
   <lname>1950SOI_EAM%CMIP6_ELM%SPBC_MPASSI_MPASO_MOSART_SGLC_SWAV</lname>
+</compset>
+
+<compset>
+  <alias>WCYCL1950_OMEGA</alias>
+  <lname>1950SOI_EAM%CMIP6_ELM%SPBC_MPASSI_OMEGA_MOSART_SGLC_SWAV</lname>
 </compset>
 
 <compset>
@@ -62,6 +72,11 @@
 <compset>
   <alias>WCYCL20TR</alias>
   <lname>20TRSOI_EAM%CMIP6_ELM%SPBC_MPASSI_MPASO_MOSART_SGLC_SWAV</lname>
+</compset>
+
+<compset>
+  <alias>WCYCL20TR_OMEGA</alias>
+  <lname>20TRSOI_EAM%CMIP6_ELM%SPBC_MPASSI_OMEGA_MOSART_SGLC_SWAV</lname>
 </compset>
 
 <compset>

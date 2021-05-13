@@ -15,9 +15,9 @@ endif()
 
 # driver (files live in E3SM)
 list(APPEND RAW_SOURCES
-  ../../mpas-ocean/driver/ocn_comp_mct.F
-  ../../mpas-ocean/driver/mpaso_cpl_indices.F
-  ../../mpas-ocean/driver/mpaso_mct_vars.F
+  ../../omega/driver/ocn_comp_mct.F
+  ../../omega/driver/mpaso_cpl_indices.F
+  ../../omega/driver/mpaso_mct_vars.F
 )
 
 # dycore
@@ -103,9 +103,9 @@ list(APPEND RAW_SOURCES ${OCEAN_DRIVER})
 list(APPEND DISABLE_QSMP ${OCEAN_DRIVER})
 
 # Add CVMix
-if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/core_ocean/cvmix/.git)
-  message(FATAL_ERROR "Missing core_ocean/cvmix/.git, did you forget to 'git submodule update --init --recursive' ?")
-endif()
+#if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/core_ocean/cvmix/.git)
+#  message(FATAL_ERROR "Missing core_ocean/cvmix/.git, did you forget to 'git submodule update --init --recursive' ?")
+#endif()
 set(CVMIX_FILES
   core_ocean/cvmix/src/shared/cvmix_kinds_and_types.F90
   core_ocean/cvmix/src/shared/cvmix_background.F90
@@ -120,9 +120,9 @@ set(CVMIX_FILES
 )
 
 # Add BGC
-if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/core_ocean/BGC/.git)
-  message(FATAL_ERROR "Missing core_ocean/BGC/.git, did you forget to 'git submodule update --init --recursive' ?")
-endif()
+#if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/core_ocean/BGC/.git)
+#  message(FATAL_ERROR "Missing core_ocean/BGC/.git, did you forget to 'git submodule update --init --recursive' ?")
+#endif()
 set(BGC_FILES
   core_ocean/BGC/BGC_mod.F90
   core_ocean/BGC/BGC_parms.F90
@@ -134,9 +134,9 @@ set(BGC_FILES
 )
 
 # Add GOTM
-if (NOT EXISTS core_ocean/gotm/.git)
-  message(FATAL "Missing core_ocean/gotm/.git, did you forget to 'git submodule update --init --recursive' ?")
-endif()
+#if (NOT EXISTS core_ocean/gotm/.git)
+#  message(FATAL "Missing core_ocean/gotm/.git, did you forget to 'git submodule update --init --recursive' ?")
+#endif()
 set(GOTM_FILES
   core_ocean/gotm/src/util/adv_center.F90
   core_ocean/gotm/src/util/convert_fluxes.F90

@@ -296,7 +296,10 @@ if ($print>=2) {
 
 if ($NML_TYPE eq "ww3") {
     add_default($nl, 'initfile');
+    add_default($nl, 'stafile', 'val'=>"'${DIN_LOC_ROOT}/wav/ww3/stations.txt'");
     add_default($nl, 'outfreq');
+    add_default($nl, 'fldout');
+    add_default($nl, 'fldcou');
 }
 if ($NML_TYPE eq "ww3_grid") {
 
@@ -327,7 +330,7 @@ if ($NML_TYPE eq "ww3_grid") {
     add_default($nl, 'grid%dmin');
 
     add_default($nl, 'unst%sf');
-    add_default($nl, 'unst%filename');
+    add_default($nl, 'unst%filename', 'val'=>"'${DIN_LOC_ROOT}/wav/ww3/${WAV_GRID}.msh'");
     add_default($nl, 'unst%idf');
     add_default($nl, 'unst%idla');
     add_default($nl, 'unst%idfm');
@@ -345,6 +348,10 @@ if ($NML_TYPE eq "ww3_grid") {
 if ($NML_TYPE eq "ww3_grid_nml") {
     add_default($nl, 'ugobcauto');
     add_default($nl, 'expfsn');
+
+    add_default($nl, 'plat');
+    add_default($nl, 'plon');
+    add_default($nl, 'unrot');
 }
 
 #-----------------------------------------------------------------------------------------------
@@ -369,12 +376,27 @@ if ($NML_TYPE eq "ww3_grid") {
     $outfile = "./ww3_grid.nml";
 }
 if ($NML_TYPE eq "ww3_grid_nml") {
-    @groups = qw(unst);
+    @groups = qw(unst rotd);
     $outfile = "./ww3_grid_namelists.nml";
 }
 
 $nl->write($outfile, 'groups'=>\@groups, 'note'=>"$note" );
 if ($print>=2) { print "Writing ww3 namelist to $outfile $eol"; }
+
+# This namelist has to be capitalized...
+if ($NML_TYPE eq "ww3_grid_nml") {
+
+    my $file = "ww3_grid_namelists.nml";
+    open(my $fh, '<', $file) or die "can't open $file";
+    local $/; 
+    my $text = <$fh>;
+    close $fh or die "can't close $file";
+    
+    open(my $fh, '>', $file) or die "can't open $file";
+    print($fh uc($text)); 
+    close $fh or die "can't close $file";
+  
+}
 
 # Write out required local input files
 check_input_files($nl, $DIN_LOC_ROOT, "$CASEROOT/Buildconf/$NML_TYPE.input_data_list");

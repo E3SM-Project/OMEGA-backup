@@ -13,7 +13,15 @@
        category="ww3_inparm"
        group="ww3_inparm" 
        valid_values="" >
-WaveWatchII restart file
+WaveWatchIII restart file
+</entry>
+
+<entry id="stafile" 
+       type="char*1024" 
+       category="ww3_inparm"
+       group="ww3_inparm" 
+       valid_values="" >
+WaveWatchIII station output file
 </entry>
 
 <entry id="outfreq" 
@@ -22,6 +30,22 @@ WaveWatchII restart file
        group="ww3_inparm" 
        valid_values="" >
 WaveWatchIII coupling frequency
+</entry>
+
+<entry id="fldout" 
+       type="char*1024" 
+       category="ww3_inparm"
+       group="ww3_inparm" 
+       valid_values="" >
+WaveWatchIII output fields 
+</entry>
+
+<entry id="fldcou" 
+       type="char*1024" 
+       category="ww3_inparm"
+       group="ww3_inparm" 
+       valid_values="" >
+WaveWatchIII coupling fields 
 </entry>
 
 </namelist_definition>

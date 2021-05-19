@@ -149,7 +149,7 @@
 ! 10. Source code :
 !
 !/ ------------------------------------------------------------------- /
-      use w3gdatmd, only: dtmax, dtcfl, dtcfli, dtmin, nx, ny, nseal, mapsf, mapsta, x0, y0, sx, sy, w3nmod, w3setg
+      use w3gdatmd, only: dtmax, dtcfl, dtcfli, dtmin, nx, ny, nseal, mapsf, mapsta, x0, y0, sx, sy, w3nmod, w3setg, AnglD
       use w3wdatmd, only: time, w3ndat, w3setw
       use w3adatmd, only: ussx, ussy, w3naux, w3seta, sxx, sxy, syy !SB, lamult
       use w3idatmd, only: inflags1, w3seti, w3ninp
@@ -160,12 +160,14 @@
       USE W3IDATMD, ONLY: !SB, HML   ! QL, 150525, mixing layer depth
       use w3odatmd, only: w3nout, w3seto, naproc, iaproc, napout, naperr,             &
                           nogrp, ngrpp, noge, idout, fnmpre, iostyp, notype
+      use w3servmd, only: w3xyrtn
 !/
       use w3initmd, only: w3init 
       use w3wavemd, only: w3wave 
       use w3gridmd, only: w3grid
 !/
       use w3iopomd, only:
+      use w3iogomd, only: w3flgrdflag
       use w3timemd, only: stme21 
       use w3cesmmd, only : casename, initfile, rstwr, runtype, histwr, outfreq
       use w3cesmmd, only : inst_index, inst_name, inst_suffix
@@ -210,6 +212,8 @@
 
       integer,save :: stdout
       integer,save :: odat(40)
+
+      real,allocatable,save :: AnglDL(:)
 
       include "mpif.h"
 !--- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -266,8 +270,8 @@ CONTAINS
       integer             :: jsea,isea
       real                :: a(nhmax,4)
       real, allocatable   :: x(:), y(:)
-      logical             :: flogrd(nogrp,ngrpp), flogrd2(nogrp,ngrpp)
-      logical             :: flogd(nogrp), flogd2(nogrp)
+      logical             :: flgrd(nogrp,ngrpp), flgrd2(nogrp,ngrpp)
+      logical             :: flgd(nogrp), flgd2(nogrp)
       logical             :: prtfrm, flt
       character(len=*),parameter :: subname = '(wav_init_mct)'
 
@@ -277,7 +281,9 @@ CONTAINS
       character(len=20)   :: strng
       character(len=23)   :: dtme21
       character(len=30)   :: idotyp(6)
-      character(len=10), allocatable :: pnames(:)
+      character(len=40), allocatable :: pnames(:)
+      character(len=256) :: stafile
+      character(len=1024) :: fldout, fldcou
 
       !/ ------------------------------------------------------------------- /
 
@@ -294,7 +300,7 @@ CONTAINS
       DATA IDSTR  / 'LEV', 'CUR', 'WND', 'ICE', 'DT0', 'DT1', 'DT2',  &
                     'MOV' /
 
-      namelist /ww3_inparm/ initfile, outfreq
+      namelist /ww3_inparm/ initfile, outfreq, stafile, fldout, fldcou
 
       !--------------------------------------------------------------------
       ! Initialize mpi
@@ -421,11 +427,11 @@ CONTAINS
       call shr_sys_flush(ndso)
 
       if (     trim(starttype) == trim(seq_infodata_start_type_start)) then
-         write(ndso,*) 'starttype: initial'
+         if ( iaproc .eq. napout ) write(ndso,*) 'starttype: initial'
       else if (trim(starttype) == trim(seq_infodata_start_type_cont) ) then
-         write(ndso,*) 'starttype: continue'
+         if ( iaproc .eq. napout ) write(ndso,*) 'starttype: continue'
       else if (trim(starttype) == trim(seq_infodata_start_type_brnch)) then
-         write(ndso,*) 'starttype: branch'
+         if ( iaproc .eq. napout ) write(ndso,*) 'starttype: branch'
       end if
       if ( iaproc == napout) then
          write(ndso,*) trim(subname),' inst_name   = ',trim(inst_name)
@@ -485,211 +491,8 @@ CONTAINS
       time = time0
 
       !--------------------------------------------------------------------
-      ! Define output type and fields
-      !--------------------------------------------------------------------
-
-      iostyp = 1        ! gridded field
-      write (ndso,940) 'no dedicated output process, any file system '
-      call shr_sys_flush(ndso)
-
-      ! TODO - need to enable restart files in run
-      ! Actually will need a new restart flag - since all of the ODAT
-      ! should be set to 0 - since they are initializated in w3initmd
-      ! ODAT    I.A.   I   Output data, five parameters per output type
-      !                     1-5  Data for OTYPE = 1; gridded fields.
-      !                          1 YYYMMDD for first output.
-      !                          2 HHMMSS for first output.
-      !                          3 Output interval in seconds.
-      !                          4 YYYMMDD for last output.
-      !                          5 HHMMSS for last output.
-      !                     6-10 Id. for OTYPE = 2; point output.
-      !                    11-15 Id. for OTYPE = 3; track point output.
-      !                    16-20 Id. for OTYPE = 4; restart files.
-      !                    21-25 Id. for OTYPE = 5; boundary data.
-      !                    31-35 Id. for OTYPE = 7; coupling data.
-      !                    36-40 Id. for OTYPE = 8; second restart file
-      ! FLGRD   L.A.   I   Flags for gridded output.
-      ! NPT     Int.   I   Number of output points
-      ! X/YPT   R.A.   I   Coordinates of output points.
-      ! PNAMES  C.A.   I   Output point names.
-
-      npts = 0
-      allocate ( x(1), y(1), pnames(1) )
-      pnames(1) = ' '
-
-      notype = 8
-
-      do j=1, notype
-         odat(5*(j-1)+3) = 0
-      end do
-
-      ! QL, 160823, initialize flag for restart
-      rstwr = .false.
-      ! QL, 160601, initialize flag for history file
-      histwr = .false.
-
-      ! QL, 160601, get coupling interval
-      call seq_timemgr_eclockgetdata(eclock, dtime=dtime_sync )
-      !DEBUG
-      ! Hardwire gridded output for now
-      ! first output time stamp is now read from file
-      ! QL, 150525, 1-5 for history files, 16-20 for restart files
-      !     150629, restart output interval is set to the total time of run
-      !     150823, restart is taken over by rstwr
-      !     160601, output interval is set to coupling interval, so that
-      !             variables calculated in W3IOGO could be updated at
-      !             every coupling interval
-      odat(1) = time(1)     ! YYYYMMDD for first output
-      odat(2) = time(2)     ! HHMMSS for first output
-      odat(3) = dtime_sync  ! output interval in sec ! changed by Adrean
-      odat(4) = 99990101    ! YYYYMMDD for last output
-      odat(5) = 0           ! HHMMSS for last output
-      odat(16) = time(1)    ! YYYYMMDD for first output
-      odat(17) = time(2)    ! HHMMSS for first output
-      odat(18) = 86400*5    ! output interval in sec
-      odat(19) = 99990101   ! YYYYMMDD for last output
-      odat(20) = 0          ! HHMMSS for last output
-      !DEBUG
-
-      ! Output Type 1: fields of mean wave parameters gridded output
-      flogrd2 = .false.
-      flogd2  = .false.
-      flogd = .false.
-
-      ! 1) Forcing fields
-      flogrd(1,1)  = .false. ! Water depth         
-      flogrd(1,2)  = .false. ! Current vel.        
-      flogrd(1,3)  = .true.  ! Wind speed          
-      flogrd(1,4)  = .false. ! Air-sea temp. dif.  
-      flogrd(1,5)  = .false. ! Water level         
-      flogrd(1,6)  = .false. ! Ice concentration   
-      flogrd(1,7)  = .false. ! Iceberg damp coeffic
-
-      ! 2) Standard mean wave parameters
-      flogrd(2,1)  = .true.  ! Wave height         
-      flogrd(2,2)  = .false. ! Mean wave length    
-      flogrd(2,3)  = .false. ! Mean wave period(+2)
-      flogrd(2,4)  = .false. ! Mean wave period(-1)
-      flogrd(2,5)  = .false. ! Mean wave period(+1)
-      flogrd(2,6)  = .true.  ! Peak frequency      
-      flogrd(2,7)  = .false. ! Mean wave dir. a1b1 
-      flogrd(2,8)  = .false. ! Mean dir. spr. a1b1 
-      flogrd(2,9)  = .true.  ! Peak direction      
-      flogrd(2,10) = .false. ! Infragravity height
-      flogrd(2,11) = .false. ! Space-Time Max E   
-      flogrd(2,12) = .false. ! Space-Time Max Std 
-      flogrd(2,13) = .false. ! Space-Time Hmax    
-      flogrd(2,14) = .false. ! Spc-Time Hmax^crest
-      flogrd(2,15) = .false. ! STD Space-Time Hmax
-      flogrd(2,16) = .false. ! STD ST Hmax^crest  
-
-      ! 3) Frequency-dependent standard parameters
-      flogrd(3,1)  = .false. ! 1D Freq. Spectrum   
-      flogrd(3,2)  = .false. ! Mean wave dir. a1b1 
-      flogrd(3,3)  = .false. ! Mean dir. spr. a1b1 
-      flogrd(3,4)  = .false. ! Mean wave dir. a2b2 
-      flogrd(3,5)  = .false. ! Mean dir. spr. a2b2 
-      flogrd(3,6)  = .false. ! Wavenumber array    
-
-      ! 4) Spectral Partitions parameters
-      flogrd(4,1) = .false. ! Part. wave heigt    
-      flogrd(4,2) = .false. ! Part. peak period   
-      flogrd(4,3) = .false. ! Part. peak wave l.  
-      flogrd(4,4) = .false. ! Part. mean direction
-      flogrd(4,5) = .false. ! Part. dir. spread   
-      flogrd(4,6) = .false. ! Part. wind sea frac.
-      flogrd(4,7) = .false. ! Total wind sea frac.
-      flogrd(4,8) = .false. ! Number of partitions
-
-      ! 5) Atmosphere-waves layer
-      flogrd(5,1) = .false. ! Friction velocity   
-      flogrd(5,2) = .false. ! Charnock parameter  
-      flogrd(5,3) = .false. ! Energy flux         
-      flogrd(5,4) = .false. ! Wind-wave enrgy flux
-      flogrd(5,5) = .false. ! Wind-wave net mom. f
-      flogrd(5,6) = .false. ! Wind-wave neg.mom.f.
-      flogrd(5,7) = .false. ! Whitecap coverage   
-      flogrd(5,8) = .false. ! Whitecap mean thick.
-      flogrd(5,9) = .false. ! Mean breaking height
-      flogrd(5,10) = .false. ! Dominant break prob 
-
-      ! 6) Wave-ocean layer
-      flogrd(6,1) = .false. ! Radiation stresses  
-      flogrd(6,2) = .false. ! Wave-ocean mom. flux
-      flogrd(6,3) = .false. ! wave ind p Bern Head
-      flogrd(6,4) = .false. ! Wave-ocean TKE  flux
-      flogrd(6,5) = .false. ! Stokes transport    
-      flogrd(6,6) = .false. ! Stokes drift at z=0 
-      flogrd(6,7) = .false. ! 2nd order pressure  
-      flogrd(6,8) = .false. ! Stokes drft spectrum
-      flogrd(6,9) = .false. ! 2nd ord press spectr
-      flogrd(6,10) = .false. ! Wave-ice mom. flux  
-      flogrd(6,11) = .false. ! Wave-ice energy flux
-
-      ! 7) Wave-bottom layer
-      flogrd(7,1) = .false. ! Bottom rms ampl.    
-      flogrd(7,2) = .false. ! Bottom rms velocity 
-      flogrd(7,3) = .false. ! Bedform parameters  
-      flogrd(7,4) = .false. ! Energy diss. in WBBL
-      flogrd(7,5) = .false. ! Moment. loss in WBBL
-
-      ! 8) Spectrum parameters
-      flogrd(8,1) = .false. ! Mean square slopes  
-      flogrd(8,2) = .false. ! Phillips tail const
-      flogrd(8,3) = .false. ! Lx-Ly mean wvlength
-      flogrd(8,4) = .false. ! Surf grad correl XT
-      flogrd(8,5) = .false. ! Surf grad correl YT
-      flogrd(8,6) = .false. ! Surf grad correl XY
-      flogrd(8,7) = .false. ! Surface crest param
-
-      ! 9) Numerical diagnostics
-      flogrd(9,1) = .false. ! Avg. time step.     
-      flogrd(9,2) = .false. ! Cut-off freq.       
-      flogrd(9,3) = .false. ! Maximum spatial CFL 
-      flogrd(9,4) = .false. ! Maximum angular CFL 
-      flogrd(9,5) = .false. ! Maximum k advect CFL
-
-      do i = 1, nogrp
-        if(any(flogrd(i,:))) then
-          flogd(i) = .true.
-        end if
-      end do
-
-      if ( iaproc .eq. napout ) then
-         flt = .true.
-         do i=1, nogrp
-            do j = 1, noge(i)
-              if ( flogrd(i,j) ) then
-                 if ( flt ) then
-                    write (ndso,1945) idout(i,j)
-                    flt    = .false.
-                 else
-                    write (ndso,1946) idout(i,j)
-                 end if
-              end if
-            end do
-         end do
-         if ( flt ) write (ndso,1945) 'no fields defined'
-      end if
-
-      call shr_sys_flush(ndso)
-
-      !--------------------------------------------------------------------
-      ! Wave model initializations
-      !--------------------------------------------------------------------
-
-      ! Notes on ww3 initialization:
-      ! ww3 read initialization occurs in w3iors (which is called by initmd)
-      ! For a startup (including hybrid) or branch run the initial datafile is
-      ! set in namelist input 'initfile'
-      ! For a continue run - the initfile vluae is created from the time(1:2)
-      ! array set below
-
-      if ( iaproc .eq. napout ) write (ndso,950)
-      if ( iaproc .eq. napout ) write (ndso,951) 'wave model ...'
-      call shr_sys_flush(ndso)
-
       ! Read namelist (set initfile in w3cesmmd)
+      !--------------------------------------------------------------------
       if ( iaproc .eq. napout ) then
          unitn = shr_file_getunit()
          write(ndso,*) 'Read in ww3_inparm namelist from ww3_in'//trim(inst_suffix)
@@ -708,6 +511,237 @@ CONTAINS
       end if
       call shr_mpi_bcast(initfile, mpi_comm)
       call shr_mpi_bcast(outfreq, mpi_comm)
+      call shr_mpi_bcast(stafile, mpi_comm)
+      call shr_mpi_bcast(fldout, mpi_comm)
+      call shr_mpi_bcast(fldcou, mpi_comm)
+
+
+      !--------------------------------------------------------------------
+      ! Define output type and fields
+      !--------------------------------------------------------------------
+
+      iostyp = 2        ! gridded field
+      if ( iaproc .eq. napout ) write (ndso,940) 'no dedicated output process, any file system '
+      call shr_sys_flush(ndso)
+
+      ! TODO - need to enable restart files in run
+      ! Actually will need a new restart flag - since all of the ODAT
+      ! should be set to 0 - since they are initializated in w3initmd
+      ! ODAT    I.A.   I   Output data, five parameters per output type
+      !                     1-5  Data for OTYPE = 1; gridded fields.
+      !                          1 YYYMMDD for first output.
+      !                          2 HHMMSS for first output.
+      !                          3 Output interval in seconds.
+      !                          4 YYYMMDD for last output.
+      !                          5 HHMMSS for last output.
+      !                     6-10 Id. for OTYPE = 2; point output.
+      !                    11-15 Id. for OTYPE = 3; track point output.
+      !                    16-20 Id. for OTYPE = 4; restart files.
+      !                    21-25 Id. for OTYPE = 5; boundary data.
+      !                    26-30 Id. for OTYPE = 6; partitioned data.
+      !                    31-35 Id. for OTYPE = 7; coupling data.
+      !                    36-40 Id. for OTYPE = 8; second restart file
+      ! FLGRD   L.A.   I   Flags for gridded output.
+      ! NPT     Int.   I   Number of output points
+      ! X/YPT   R.A.   I   Coordinates of output points.
+      ! PNAMES  C.A.   I   Output point names.
+
+
+      notype = 8
+
+      do j=1, notype
+         odat(5*(j-1)+3) = 0
+      end do
+
+      ! QL, 160823, initialize flag for restart
+      rstwr = .false.
+      ! QL, 160601, initialize flag for history file
+      histwr = .false.
+      ! QL, 160601, get coupling interval
+      call seq_timemgr_eclockgetdata(eclock, dtime=dtime_sync )
+
+      ! Gridded fields
+      odat(1) = time(1)     ! YYYYMMDD for first output
+      odat(2) = time(2)     ! HHMMSS for first output
+      odat(3) = dtime_sync  ! output interval in sec ! changed by Adrean
+      odat(4) = 99990101    ! YYYYMMDD for last output
+      odat(5) = 0           ! HHMMSS for last output
+
+      ! Point output
+      odat(6) = time(1)     ! YYYYMMDD for first output
+      odat(7) = time(2)     ! HHMMSS for first output
+      odat(8) = dtime_sync  ! output interval in sec 
+      odat(9) = 99990101    ! YYYYMMDD for last output
+      odat(10) = 0          ! HHMMSS for last output
+
+      ! Restart files
+      odat(16) = time(1)    ! YYYYMMDD for first output
+      odat(17) = time(2)    ! HHMMSS for first output
+      odat(18) = 86400*5    ! output interval in sec
+      odat(19) = 99990101   ! YYYYMMDD for last output
+      odat(20) = 0          ! HHMMSS for last output
+
+      ! Coupling data
+      odat(31) = time(1)    ! YYYYMMDD for first output
+      odat(32) = time(2)    ! HHMMSS for first output
+      odat(33) = dtime_sync ! output interval in sec
+      odat(34) = 99990101   ! YYYYMMDD for last output
+      odat(35) = 0          ! HHMMSS for last output
+
+      ! Output Type 1: fields of mean wave parameters gridded output
+      flgrd2 = .false.
+      flgd2  = .false.
+      flgd = .false.
+
+      !  G  G
+      !  R  X Grp  Param Code     Output  Parameter/Group
+      !  B  O Numb Numbr Name        Tag  Definition 
+      !  --------------------------------------------------
+      !        1                          Forcing Fields
+      !   -------------------------------------------------
+      !  T  T  1     1   DW         DPT   Water depth.
+      !  T  T  1     2   C[X,Y]     CUR   Current velocity.
+      !  T  T  1     3   UA         WND   Wind speed.
+      !  T  T  1     4   AS         AST   Air-sea temperature difference.
+      !  T  T  1     5   WLV        WLV   Water levels.
+      !  T  T  1     6   ICE        ICE   Ice concentration.
+      !  T  T  1     7   IBG        IBG   Iceberg-induced damping.
+      !  T  T  1     8   D50        D50   Median sediment grain size.
+      !  T  T  1     9   IC1        IC1   Ice thickness.
+      !  T  T  1    10   IC5        IC5   Ice flow diameter.
+      !   -------------------------------------------------
+      !        2                          Standard mean wave Parameters
+      !   -------------------------------------------------
+      !  T  T  2     1   HS         HS    Wave height.
+      !  T  T  2     2   WLM        LM    Mean wave length.
+      !  T  T  2     3   T02        T02   Mean wave period (Tm0,2).
+      !  T  T  2     4   T0M1       T0M1  Mean wave period (Tm0,-1).
+      !  T  T  2     5   T01        T01   Mean wave period (Tm0,1).
+      !  T  T  2     6   FP0        FP    Peak frequency.
+      !  T  T  2     7   THM        DIR   Mean wave direction.
+      !  T  T  2     8   THS        SPR   Mean directional spread.
+      !  T  T  2     9   THP0       DP    Peak direction.
+      !  T  T  2    10   HIG        HIG   Infragravity height
+      !  T  T  2    11   STMAXE     MXE   Max surface elev (STE)
+      !  T  T  2    12   STMAXD     MXES  St Dev of max surface elev (STE)
+      !  T  T  2    13   HMAXE      MXH   Max wave height (STE)
+      !  T  T  2    14   HCMAXE     MXHC  Max wave height from crest (STE)
+      !  T  T  2    15   HMAXD      SDMH  St Dev of MXC (STE)
+      !  T  T  2    16   HCMAXD     SDMHC St Dev of MXHC (STE)
+      !  F  T  2    17   WBT        WBT   Dominant wave breaking probability bT
+      !  F  F  2    18   FP0        TP    Peak period (from peak freq)
+      !   -------------------------------------------------
+      !        3                          Spectral Parameters (first 5)
+      !   -------------------------------------------------
+      !  F  F  3     1   EF         EF    Wave frequency spectrum
+      !  F  F  3     2   TH1M       TH1M  Mean wave direction from a1,b2
+      !  F  F  3     3   STH1M      STH1M Directional spreading from a1,b2
+      !  F  F  3     4   TH2M       TH2M  Mean wave direction from a2,b2
+      !  F  F  3     5   STH2M      STH2M Directional spreading from a2,b2
+      !  F  F  3     6   WN         WN    Wavenumber array
+      !   -------------------------------------------------
+      !        4                          Spectral Partition Parameters 
+      !   -------------------------------------------------
+      !  T  T  4     1   PHS        PHS   Partitioned wave heights.
+      !  T  T  4     2   PTP        PTP   Partitioned peak period.
+      !  T  T  4     3   PLP        PLP   Partitioned peak wave length.
+      !  T  T  4     4   PDIR       PDIR  Partitioned mean direction.
+      !  T  T  4     5   PSI        PSPR  Partitioned mean directional spread.
+      !  T  T  4     6   PWS        PWS   Partitioned wind sea fraction.
+      !  T  T  4     7   PDP        PDP   Peak wave direction of partition.
+      !  T  T  4     8   PQP        PQP   Goda peakdedness parameter of partition.
+      !  T  T  4     9   PPE        PPE   JONSWAP peak enhancement factor of partition.
+      !  T  T  4    10   PGW        PGW   Gaussian frequency width of partition.
+      !  T  T  4    11   PSW        PSW   Spectral width of partition.
+      !  T  T  4    12   PTM1       PTM10 Mean wave period (m-1,0) of partition.
+      !  T  T  4    13   PT1        PT01  Mean wave period (m0,1) of partition.
+      !  T  T  4    14   PT2        PT02  Mean wave period (m0,2) of partition.
+      !  T  T  4    15   PEP        PEP   Peak spectral density of partition.
+      !  T  T  4    16   PWST       TWS   Total wind sea fraction.
+      !  T  T  4    17   PNR        PNR   Number of partitions.
+      !   -------------------------------------------------
+      !        5                          Atmosphere-waves layer
+      !   -------------------------------------------------
+      !  T  T  5     1   UST        UST   Friction velocity.
+      !  F  T  5     2   CHARN      CHA   Charnock parameter
+      !  F  T  5     3   CGE        CGE   Energy flux
+      !  F  T  5     4   PHIAW      FAW   Air-sea energy flux
+      !  F  T  5     5   TAUWI[X,Y] TAW   Net wave-supported stress
+      !  F  T  5     6   TAUWN[X,Y] TWA   Negative part of the wave-supported stress
+      !  F  F  5     7   WHITECAP   WCC   Whitecap coverage
+      !  F  F  5     8   WHITECAP   WCF   Whitecap thickness
+      !  F  F  5     9   WHITECAP   WCH   Mean breaking height
+      !  F  F  5    10   WHITECAP   WCM   Whitecap moment
+      !  F  F  5    11   FWS        FWS   Wind sea mean period
+      !   -------------------------------------------------
+      !        6                          Wave-ocean layer 
+      !   -------------------------------------------------
+      !  F  F  6     1   S[XX,YY,XY] SXY  Radiation stresses.
+      !  F  F  6     2   TAUO[X,Y]  TWO   Wave to ocean momentum flux
+      !  F  F  6     3   BHD        BHD   Bernoulli head (J term) 
+      !  F  F  6     4   PHIOC      FOC   Wave to ocean energy flux
+      !  F  F  6     5   TUS[X,Y]   TUS   Stokes transport
+      !  F  F  6     6   USS[X,Y]   USS   Surface Stokes drift
+      !  F  F  6     7   [PR,TP]MS  P2S   Second-order sum pressure 
+      !  F  F  6     8   US3D       USF   Spectrum of surface Stokes drift
+      !  F  F  6     9   P2SMS      P2L   Micro seism  source term
+      !  F  F  6    10   TAUICE     TWI   Wave to sea ice stress
+      !  F  F  6    11   PHICE      FIC   Wave to sea ice energy flux
+      !  F  F  6    12   USSP       USP   Partitioned surface Stokes drift
+      !   -------------------------------------------------
+      !        7                          Wave-bottom layer 
+      !   -------------------------------------------------
+      !  F  F  7     1   ABA        ABR   Near bottom rms amplitides.
+      !  F  F  7     2   UBA        UBR   Near bottom rms velocities.
+      !  F  F  7     3   BEDFORMS   BED   Bedforms
+      !  F  F  7     4   PHIBBL     FBB   Energy flux due to bottom friction 
+      !  F  F  7     5   TAUBBL     TBB   Momentum flux due to bottom friction
+      !   -------------------------------------------------
+      !        8                          Spectrum parameters
+      !   -------------------------------------------------
+      !  F  F  8     1   MSS[X,Y]   MSS   Mean square slopes
+      !  F  F  8     2   MSC[X,Y]   MSC   Spectral level at high frequency tail
+      !  F  F  8     3   WL02[X,Y]  WL02  East/X North/Y mean wavelength compon
+      !  F  F  8     4   ALPXT      AXT   Correl sea surface gradients (x,t)
+      !  F  F  8     5   ALPYT      AYT   Correl sea surface gradients (y,t)
+      !  F  F  8     6   ALPXY      AXY   Correl sea surface gradients (x,y)
+      !   -------------------------------------------------
+      !        9                          Numerical diagnostics  
+      !   -------------------------------------------------
+      !  T  T  9     1   DTDYN      DTD   Average time step in integration.
+      !  T  T  9     2   FCUT       FC    Cut-off frequency.
+      !  T  T  9     3   CFLXYMAX   CFX   Max. CFL number for spatial advection. 
+      !  T  T  9     4   CFLTHMAX   CFD   Max. CFL number for theta-advection. 
+      !  F  F  9     5   CFLKMAX    CFK   Max. CFL number for k-advection. 
+      !   -------------------------------------------------
+      !        10                         User defined          
+      !   -------------------------------------------------
+      !  F  F  10    1              U1    User defined #1. (requires coding ...)
+      !  F  F  10    2              U2    User defined #1. (requires coding ...)
+      !   -------------------------------------------------
+
+      call w3flgrdflag(ndso,ndso,ndse,fldout,flgd, flgrd, iaproc,napout,ierr)
+      call w3flgrdflag(ndso,ndso,ndse,fldcou,flgd2,flgrd2,iaproc,napout,ierr)
+
+      call shr_sys_flush(ndso)
+
+      call read_stations_file(stafile,npts,x,y,pnames)
+
+      !--------------------------------------------------------------------
+      ! Wave model initializations
+      !--------------------------------------------------------------------
+
+      ! Notes on ww3 initialization:
+      ! ww3 read initialization occurs in w3iors (which is called by initmd)
+      ! For a startup (including hybrid) or branch run the initial datafile is
+      ! set in namelist input 'initfile'
+      ! For a continue run - the initfile vluae is created from the time(1:2)
+      ! array set below
+
+      if ( iaproc .eq. napout ) write (ndso,950)
+      if ( iaproc .eq. napout ) write (ndso,951) 'wave model ...'
+      call shr_sys_flush(ndso)
+
 
       ! Set casename (in w3cesmmd)
       call seq_infodata_GetData(infodata,case_name=casename)
@@ -717,7 +751,7 @@ CONTAINS
       ! - reads either the initfile if the run is startup or branch
       ! - constructs the filename from the casename variable and the time(:) array
       !   which is set above
-      call w3init ( 1, .false., 'ww3', nds, ntrace, odat, flogrd, flogrd2, flogd, flogd2, npts, x, y,   &
+      call w3init ( 1, .false., 'ww3', nds, ntrace, odat, flgrd, flgrd2, flgd, flgd2, npts, x, y,   &
            pnames, iprt, prtfrm, mpi_comm )
       call shr_sys_flush(ndso)
 
@@ -727,6 +761,13 @@ CONTAINS
       dtcfl  = real(dtime_sync) / 2. !checked by adrean
       dtcfli = real(dtime_sync)      !checked by adrean
       dtmin  = real(dtime_sync) / 12 !checked by adrean
+
+      ! Localize AnglDL 
+      allocate(AnglDL(nseal))
+      do jsea = 1,nseal
+        isea = iaproc + (jsea-1)*naproc
+        AnglDL(jsea) = AnglD(isea)
+      enddo
 
       call mpi_barrier ( mpi_comm, ierr )
 
@@ -823,6 +864,8 @@ CONTAINS
       type(mct_aVect) :: x2w0
       type(mct_gsmap),pointer :: gsmap
       real :: def_value
+      real, dimension(:), allocatable :: cx, cy 
+      real, dimension(:), allocatable :: wx, wy 
 
       character(len=*),parameter :: subname = '(wav_run_mct)'
 
@@ -913,6 +956,38 @@ CONTAINS
       call seq_cdata_setptrs(cdata_w,gsmap=gsmap,mpicom=mpi_comm)
       call mct_aVect_gather(x2w_w,x2w0,gsmap,0,mpi_comm)
       call mct_aVect_bcast(x2w0,0,mpi_comm)
+ 
+      if (inflags1(2)) then 
+        allocate(wx(NX*NY), wy(NX*NY))
+      endif
+      if (inflags1(3)) then
+        allocate(cx(NX*NY), cy(NX*NY))
+      endif
+
+      gindex = 0
+      do IY = 1,NY
+      do IX = 1,NX
+         gindex = gindex + 1
+
+         if (inflags1(2)) then
+            CX(gindex)  = x2w0%rattr(index_x2w_so_u,gindex)
+            CY(gindex)  = x2w0%rattr(index_x2w_so_v,gindex)
+         endif
+
+         if (inflags1(3)) then
+            WX(gindex)  = x2w0%rattr(index_x2w_sa_u,gindex)
+            WY(gindex)  = x2w0%rattr(index_x2w_sa_v,gindex)
+         endif
+
+      enddo
+      enddo
+
+      if (inflags1(2)) then
+        call w3xyrtn(NX*NY,CX,CY,-AnglD) 
+      endif
+      if (inflags1(3)) then
+        call w3xyrtn(NX*NY,WX,WY,-AnglD)
+      endif
 
       ! use these loops for global copy
       gindex = 0
@@ -931,16 +1006,16 @@ CONTAINS
          endif
 
          if (inflags1(2)) then
-            CX0(IX,IY)  = x2w0%rattr(index_x2w_so_u,gindex)
+            CX0(IX,IY)  = CX(gindex) 
             CXN(IX,IY)  = CX0(IX,IY)
-            CY0(IX,IY)  = x2w0%rattr(index_x2w_so_v,gindex)
+            CY0(IX,IY)  = CY(gindex)
             CYN(IX,IY)  = CY0(IX,IY)
          endif
 
          if (inflags1(3)) then
-            WX0(IX,IY)  = x2w0%rattr(index_x2w_sa_u,gindex)
+            WX0(IX,IY)  = WX(gindex) 
             WXN(IX,IY)  = WX0(IX,IY)
-            WY0(IX,IY)  = x2w0%rattr(index_x2w_sa_v,gindex)
+            WY0(IX,IY)  = WY(gindex) 
             WYN(IX,IY)  = WY0(IX,IY)
             DT0(IX,IY)  = x2w0%rattr(index_x2w_sa_tbot,gindex) - x2w0%rattr(index_x2w_so_t,gindex)
             DTN(IX,IY)  = DT0(IX,IY)
@@ -972,13 +1047,15 @@ CONTAINS
 
       ! copy ww3 data to coupling datatype
       ! QL, 150612, copy enhancement factor, uStokes, vStokes to coupler
+
+      call w3xyrtn(nseal,USSX(1:nseal),USSY(1:nseal),AnglDL)
       do jsea=1, nseal
          isea = iaproc + (jsea-1)*naproc
          IX  = MAPSF(ISEA,1)
          IY  = MAPSF(ISEA,2)
          if (MAPSTA(IY,IX) .eq. 1) then
-             w2x_w%rattr(index_w2x_Sw_ustokes,jsea) = USSX(ISEA)
-             w2x_w%rattr(index_w2x_Sw_vstokes,jsea) = USSY(ISEA)
+             w2x_w%rattr(index_w2x_Sw_ustokes,jsea) = USSX(jsea)
+             w2x_w%rattr(index_w2x_Sw_vstokes,jsea) = USSY(jsea)
           else
              w2x_w%rattr(index_w2x_Sw_ustokes,jsea) = 0.0
              w2x_w%rattr(index_w2x_Sw_vstokes,jsea) = 0.0
@@ -1166,5 +1243,101 @@ CONTAINS
       deallocate(idata)
 
     end subroutine wav_domain_mct
+
+!=====================================================================
+!=====================================================================
+!=====================================================================
+
+    subroutine read_stations_file(fname,npts,x,y,pnames)
+
+    implicit none
+
+    character(*), intent(in) :: fname
+    integer, intent(out) :: npts
+    real, dimension(:), allocatable, intent(out) :: x
+    real, dimension(:), allocatable, intent(out) :: y
+    character(len=40), dimension(:), allocatable, intent(out) :: pnames
+
+    integer :: ndso,ndsl
+    integer :: ipts
+    integer :: iloop
+    integer :: ierr
+    character(len=256) :: tmpline,test
+    character(len=1) :: comstr
+    real :: xx, yy
+    character(len=40) :: pn
+
+    ! Adapted from ww3_shel.ftn
+
+    NDSO = 6
+    NDSL = shr_file_getunit()
+    COMSTR = "$"
+
+    OPEN(NDSL, FILE=TRIM(ADJUSTL(fname)), FORM='FORMATTED', STATUS='OLD', ERR=2104, IOSTAT=IERR)
+    
+    ! first loop to count the number of points
+    ! second loop to allocate the array and store the points
+    IPTS = 0
+    DO ILOOP=1,2
+      REWIND (NDSL)
+    
+      IF ( ILOOP.EQ.2) THEN 
+        NPTS = IPTS 
+        IF ( NPTS.GT.0 ) THEN 
+          ALLOCATE ( X(NPTS), Y(NPTS), PNAMES(NPTS) )
+          IPTS = 0 ! reset counter to be reused for next do loop
+        ELSE 
+          ALLOCATE ( X(1), Y(1), PNAMES(1) )
+          return 
+        END IF
+      END IF
+    
+      DO   
+        READ (NDSL,*,ERR=2004,IOSTAT=IERR) TMPLINE
+        ! if end of file or stopstring, then exit
+        IF ( IERR.NE.0 .OR. INDEX(TMPLINE,"STOPSTRING").NE.0 ) EXIT 
+        ! leading blanks removed and placed on the right
+        TEST = ADJUSTL ( TMPLINE )
+        IF ( TEST(1:1).EQ.COMSTR .OR. LEN_TRIM(TEST).EQ.0 ) THEN 
+          ! if comment or blank line, then skip
+          CYCLE
+        ELSE 
+          ! otherwise, backup to beginning of line
+          BACKSPACE ( NDSL, ERR=2004, IOSTAT=IERR)
+          READ (NDSL,*,ERR=2004,IOSTAT=IERR) XX, YY, PN
+        END IF
+        IPTS = IPTS + 1
+        IF ( ILOOP .EQ. 1 ) CYCLE
+        IF ( ILOOP .EQ. 2 ) THEN 
+          X(IPTS)      = XX 
+          Y(IPTS)      = YY 
+          PNAMES(IPTS) = PN 
+          IF ( IAPROC .EQ. NAPOUT ) THEN 
+            IF ( IPTS .EQ. 1 ) THEN 
+              WRITE (NDSO,2945) XX, YY, PN
+            ELSE 
+              WRITE (NDSO,2946) IPTS, XX, YY, PN
+            END IF
+          END IF
+        END IF ! ILOOP.EQ.2
+      END DO ! end of file                      
+    END DO ! ILOOP
+    CLOSE(NDSL)
+
+ 2945 FORMAT ( '            Point  1 : ',2F8.2,2X,A)
+ 2946 FORMAT ( '              ',I6,' : ',2F8.2,2X,A)
+ 1104 FORMAT (/' *** WAVEWATCH III ERROR IN W3SHEL : *** '/           &
+               '     ERROR IN OPENING POINT FILE'/                    &
+               '     IOSTAT =',I5/)
+ 1004 FORMAT (/' *** WAVEWATCH III ERROR IN W3SHEL : *** '/           &
+               '     ERROR IN READING FROM POINT FILE'/               &
+               '     IOSTAT =',I5/)
+
+ 2104 CONTINUE
+      IF ( IAPROC .EQ. NAPERR ) WRITE (NDSO,1104) IERR 
+ 2004 CONTINUE
+      IF ( IAPROC .EQ. NAPERR ) WRITE (NDSO,1004) IERR 
+
+    end subroutine read_stations_file
 
   END MODULE WAV_COMP_MCT

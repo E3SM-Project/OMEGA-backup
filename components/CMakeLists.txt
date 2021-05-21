@@ -69,7 +69,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/build_model.cmake)
 set(BUILDCONF ${CASEROOT}/Buildconf)
 
 # Do any MPAS builds first since they manage their own flags
-if ("omega" IN_LIST COMP_NAME)
+if ("omega" IN_LIST COMP_NAMES)
   build_omega()
 else()
   build_mpas_models()

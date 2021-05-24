@@ -17,7 +17,7 @@ list(APPEND RAW_SOURCES
   core_seaice/column/ice_kinds_mod.F90
   core_seaice/column/ice_warnings.F90
   core_seaice/column/ice_colpkg_shared.F90
-  core_seaice/column/constants/cesm/ice_constants_colpkg.F90
+  core_seaice/column/ice_constants_colpkg.F90
   core_seaice/column/ice_therm_shared.F90
   core_seaice/column/ice_orbital.F90
   core_seaice/column/ice_mushy_physics.F90

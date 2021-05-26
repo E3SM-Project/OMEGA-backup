@@ -99,8 +99,18 @@ module mpaso_cpl_indices
   integer :: index_x2o_Faxa_dstdry4    ! flux: Size 4 dust -- dry deposition
   integer :: index_x2o_Foxx_rofl       ! river runoff flux                (kg/m2/s)
   integer :: index_x2o_Foxx_rofi       ! ice runoff flux                  (kg/m2/s)
-  integer :: index_x2o_Sw_ustokes      ! Stokes drift 
-  integer :: index_x2o_Sw_vstokes      ! Stokes drift 
+  integer :: index_x2o_Sw_ustokes_wavenumber_1      ! partitioned Stokes drift wavenumber 1 
+  integer :: index_x2o_Sw_vstokes_wavenumber_1      ! partitioned Stokes drift wavenumber 1
+  integer :: index_x2o_Sw_ustokes_wavenumber_2      ! partitioned Stokes drift wavenumber 2 
+  integer :: index_x2o_Sw_vstokes_wavenumber_2      ! partitioned Stokes drift wavenumber 2
+  integer :: index_x2o_Sw_ustokes_wavenumber_3      ! partitioned Stokes drift wavenumber 3 
+  integer :: index_x2o_Sw_vstokes_wavenumber_3      ! partitioned Stokes drift wavenumber 3
+  integer :: index_x2o_Sw_ustokes_wavenumber_4      ! partitioned Stokes drift wavenumber 4 
+  integer :: index_x2o_Sw_vstokes_wavenumber_4      ! partitioned Stokes drift wavenumber 4
+  integer :: index_x2o_Sw_ustokes_wavenumber_5      ! partitioned Stokes drift wavenumber 5 
+  integer :: index_x2o_Sw_vstokes_wavenumber_5      ! partitioned Stokes drift wavenumber 5
+  integer :: index_x2o_Sw_ustokes_wavenumber_6      ! partitioned Stokes drift wavenumber 6 
+  integer :: index_x2o_Sw_vstokes_wavenumber_6      ! partitioned Stokes drift wavenumber 6
 
   ! drv -> glc and internal drv fields
 
@@ -263,8 +273,18 @@ contains
     index_x2o_Sg_icemask = mct_avect_indexra(x2o,'Sg_icemask_grounded')
     index_x2o_Sg_icemask = mct_avect_indexra(x2o,'Sg_icemask_floating')
 
-    index_x2o_Sw_ustokes        = mct_avect_indexra(x2o,'Sw_ustokes')
-    index_x2o_Sw_vstokes        = mct_avect_indexra(x2o,'Sw_vstokes')
+    index_x2o_Sw_ustokes_wavenumber_1 = mct_avect_indexra(x2o,'Sw_ustokes_wavenumber_1')
+    index_x2o_Sw_vstokes_wavenumber_1 = mct_avect_indexra(x2o,'Sw_vstokes_wavenumber_1')
+    index_x2o_Sw_ustokes_wavenumber_2 = mct_avect_indexra(x2o,'Sw_ustokes_wavenumber_2')
+    index_x2o_Sw_vstokes_wavenumber_2 = mct_avect_indexra(x2o,'Sw_vstokes_wavenumber_2')
+    index_x2o_Sw_ustokes_wavenumber_3 = mct_avect_indexra(x2o,'Sw_ustokes_wavenumber_3')
+    index_x2o_Sw_vstokes_wavenumber_3 = mct_avect_indexra(x2o,'Sw_vstokes_wavenumber_3')
+    index_x2o_Sw_ustokes_wavenumber_4 = mct_avect_indexra(x2o,'Sw_ustokes_wavenumber_4')
+    index_x2o_Sw_vstokes_wavenumber_4 = mct_avect_indexra(x2o,'Sw_vstokes_wavenumber_4')
+    index_x2o_Sw_ustokes_wavenumber_5 = mct_avect_indexra(x2o,'Sw_ustokes_wavenumber_5')
+    index_x2o_Sw_vstokes_wavenumber_5 = mct_avect_indexra(x2o,'Sw_vstokes_wavenumber_5')
+    index_x2o_Sw_ustokes_wavenumber_6 = mct_avect_indexra(x2o,'Sw_ustokes_wavenumber_6')
+    index_x2o_Sw_vstokes_wavenumber_6 = mct_avect_indexra(x2o,'Sw_vstokes_wavenumber_6')
 
     call mct_aVect_clean(x2o)
     call mct_aVect_clean(o2x)

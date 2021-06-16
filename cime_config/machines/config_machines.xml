@@ -2360,6 +2360,106 @@
     </environment_variables>
   </machine>
 
+  <machine MACH="darwin-p8">
+    <DESC>LANL Franken-Cluster, variable pes/node, batch system slurm</DESC>
+    <NODENAME_REGEX>darwin-fe*.lanl.gov</NODENAME_REGEX>
+    <OS>LINUX</OS>
+    <COMPILERS>pgi,pgigpu</COMPILERS>
+    <MPILIBS>openmpi</MPILIBS>
+    <PROJECT>none</PROJECT>
+    <CIME_OUTPUT_ROOT>/scratch/users/$ENV{USER}/E3SM/scratch</CIME_OUTPUT_ROOT>
+    <DIN_LOC_ROOT>/scratch/users/lvanroekel/E3SM/input_data</DIN_LOC_ROOT>
+    <DIN_LOC_ROOT_CLMFORC>/scratch/users/lvanroekel/E3SM/input_data/atm/datm7</DIN_LOC_ROOT_CLMFORC>
+    <DOUT_S_ROOT>/scratch/users/$ENV{USER}/E3SM/archive/$CASE</DOUT_S_ROOT>
+    <BASELINE_ROOT>/scratch/users/lvanroekel/E3SM/input_data/ccsm_baselines/$COMPILER</BASELINE_ROOT>
+    <CCSM_CPRNC>/turquoise/usr/projects/climate/SHARED_CLIMATE/software/wolf/cprnc/v0.40/cprnc</CCSM_CPRNC>
+    <GMAKE_J>4</GMAKE_J>
+    <TESTS>e3sm_developer</TESTS>
+    <BATCH_SYSTEM>slurm</BATCH_SYSTEM>
+    <SUPPORTED_BY>none</SUPPORTED_BY>
+    <MAX_TASKS_PER_NODE>20</MAX_TASKS_PER_NODE>
+    <MAX_MPITASKS_PER_NODE>20</MAX_MPITASKS_PER_NODE>
+    <PROJECT_REQUIRED>FALSE</PROJECT_REQUIRED>
+    <mpirun mpilib="default">
+      <executable>srun</executable>
+      <arguments>
+        <arg name="num_tasks"> -n {{ total_tasks }}</arg>
+      </arguments>
+    </mpirun>
+    <mpirun mpilib="mpi-serial">
+      <executable/>
+    </mpirun>
+    <module_system type="module">
+      <modules>
+        <command name="purge"/>
+	<command name="load">python/3.5.1</command>
+        <command name="load">cmake/3.17.3</command>
+      </modules>
+      <modules compiler="pgi" mpilib="openmpi">
+        <command name="load">pgi/18.10</command>
+        <command name="load">openmpi/3.1.3-pgi_18.10</command>
+      </modules>
+    </module_system>
+    <RUNDIR>$CIME_OUTPUT_ROOT/$CASE/run</RUNDIR>
+    <EXEROOT>$CIME_OUTPUT_ROOT/$CASE/bld</EXEROOT>
+    <environment_variables>
+      <env name="PNETCDF_PATH">/home/lvanroekel/local/env-mpas-pgi</env>
+      <env name="NETCDF_PATH">/home/lvanroekel/local/env-mpas-pgi</env>
+      <env name="LD_LIBRARY_PATH">/home/lvanroekel/local/env-mpas-pgi/lib:$ENV{LD_LIBRARY_PATH}</env>
+      <env name="PATH">/projects/insituinf/Julia_insitu/Install/perl-5.32.0/bin:/home/lvanroekel/local/env-mpas-pgi/bin:$ENV{PATH}</env>
+    </environment_variables>
+  </machine>
+
+  <machine MACH="darwin-p9">
+    <DESC>LANL Franken-Cluster, variable pes/node, batch system slurm</DESC>
+    <NODENAME_REGEX>darwin-fe*.lanl.gov</NODENAME_REGEX>
+    <OS>LINUX</OS>
+    <COMPILERS>pgi,pgigpu</COMPILERS>
+    <MPILIBS>openmpi</MPILIBS>
+    <PROJECT>none</PROJECT>
+    <CIME_OUTPUT_ROOT>/scratch/users/$ENV{USER}/E3SM/scratch</CIME_OUTPUT_ROOT>
+    <DIN_LOC_ROOT>/scratch/users/lvanroekel/E3SM/input_data</DIN_LOC_ROOT>
+    <DIN_LOC_ROOT_CLMFORC>/scratch/users/lvanroekel/E3SM/input_data/atm/datm7</DIN_LOC_ROOT_CLMFORC>
+    <DOUT_S_ROOT>/scratch/users/$ENV{USER}/E3SM/archive/$CASE</DOUT_S_ROOT>
+    <BASELINE_ROOT>/scratch/users/lvanroekel/E3SM/input_data/ccsm_baselines/$COMPILER</BASELINE_ROOT>
+    <CCSM_CPRNC>/turquoise/usr/projects/climate/SHARED_CLIMATE/software/wolf/cprnc/v0.40/cprnc</CCSM_CPRNC>
+    <GMAKE_J>4</GMAKE_J>
+    <TESTS>e3sm_developer</TESTS>
+    <BATCH_SYSTEM>slurm</BATCH_SYSTEM>
+    <SUPPORTED_BY>none</SUPPORTED_BY>
+    <MAX_TASKS_PER_NODE>40</MAX_TASKS_PER_NODE>
+    <MAX_MPITASKS_PER_NODE>40</MAX_MPITASKS_PER_NODE>
+    <PROJECT_REQUIRED>FALSE</PROJECT_REQUIRED>
+    <mpirun mpilib="default">
+      <executable>srun</executable>
+      <arguments>
+        <arg name="num_tasks"> -n {{ total_tasks }}</arg>
+      </arguments>
+    </mpirun>
+    <mpirun mpilib="mpi-serial">
+      <executable/>
+    </mpirun>
+    <module_system type="module">
+      <modules>
+        <command name="purge"/>
+	<command name="load">python/3.5.1</command>
+        <command name="load">cmake/3.17.3</command>
+      </modules>
+      <modules compiler="pgi" mpilib="openmpi">
+        <command name="load">pgi/18.10</command>
+        <command name="load">openmpi/3.1.3-pgi_18.10</command>
+      </modules>
+    </module_system>
+    <RUNDIR>$CIME_OUTPUT_ROOT/$CASE/run</RUNDIR>
+    <EXEROOT>$CIME_OUTPUT_ROOT/$CASE/bld</EXEROOT>
+    <environment_variables>
+      <env name="PNETCDF_PATH">/home/lvanroekel/local/env-mpas-pgi</env>
+      <env name="NETCDF_PATH">/home/lvanroekel/local/env-mpas-pgi</env>
+      <env name="LD_LIBRARY_PATH">/home/lvanroekel/local/env-mpas-pgi/lib:$ENV{LD_LIBRARY_PATH}</env>
+      <env name="PATH">/projects/insituinf/Julia_insitu/Install/perl-5.32.0/bin:/home/lvanroekel/local/env-mpas-pgi/bin:$ENV{PATH}</env>
+    </environment_variables>
+  </machine>
+
   <machine MACH="badger">
     <DESC>LANL Linux Cluster, 36 pes/node, batch system slurm</DESC>
     <NODENAME_REGEX>ba-fe.*.lanl.gov</NODENAME_REGEX>

@@ -426,6 +426,30 @@
     </directives>
   </batch_system>
 
+  <batch_system MACH="darwin-p9" type="slurm" >
+	<directives>
+		<directive>--nodes={{ num_nodes }}</directive>
+		<directive>--ntasks-per-node={{ tasks_per_node }}</directive>
+		<directive>--qos=standard </directive>
+		<directive>--partition=power9 </directive>
+	</directives>
+	<queues>
+		<queue walltimemax="01:00:00" default="true">standard</queue>
+	</queues>
+  </batch_system>
+
+  <batch_system MACH="darwin-p8" type="slurm" >
+	<directives>
+		<directive>--nodes={{ num_nodes }}</directive>
+		<directive>--ntasks-per-node={{ tasks_per_node }}</directive>
+		<directive>--qos=standard </directive>
+		<directive>--partition=power8+ </directive>
+	</directives>
+	<queues>
+		<queue walltimemax="01:00:00" default="true">standard</queue>
+	</queues>
+  </batch_system>
+
   <batch_system MACH="grizzly" type="slurm" >
 	<directives>
 		<directive>--nodes={{ num_nodes }}</directive>

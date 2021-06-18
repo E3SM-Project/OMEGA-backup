@@ -239,7 +239,31 @@
     </directives>
   </batch_system>
 
-  <batch_system type="slurm" >
+  <batch_system type="darwin_slurm" >
+    <batch_query per_job_arg="-j">squeue</batch_query>
+    <batch_submit>sbatch</batch_submit>
+    <batch_cancel>scancel</batch_cancel>
+    <batch_directive>#SBATCH</batch_directive>
+    <jobid_pattern>(\d+)$</jobid_pattern>
+    <depend_string>--dependency=afterok:jobid</depend_string>
+    <depend_allow_string>--dependency=afterany:jobid</depend_allow_string>
+    <depend_separator>:</depend_separator>
+    <walltime_format>%H:%M:%S</walltime_format>
+    <batch_mail_flag>--mail-user</batch_mail_flag>
+    <batch_mail_type_flag>--mail-type</batch_mail_type_flag>
+    <batch_mail_type>none, all, begin, end, fail</batch_mail_type>
+    <submit_args>
+      <arg flag="--time" name="$JOB_WALLCLOCK_TIME"/>
+    </submit_args>
+    <directives>
+      <directive> --job-name={{ job_id }}</directive>
+      <directive> --nodes={{ num_nodes }}</directive>
+      <directive> --output={{ job_id }}.%j </directive>
+      <directive> --exclusive </directive>
+    </directives>
+  </batch_system>
+
+ <batch_system type="slurm" >
     <batch_query per_job_arg="-j">squeue</batch_query>
     <batch_submit>sbatch</batch_submit>
     <batch_cancel>scancel</batch_cancel>
@@ -426,24 +450,22 @@
     </directives>
   </batch_system>
 
-  <batch_system MACH="darwin-p9" type="slurm" >
+  <batch_system MACH="darwin-p9" type="darwin_slurm" >
 	<directives>
 		<directive>--nodes={{ num_nodes }}</directive>
 		<directive>--ntasks-per-node={{ tasks_per_node }}</directive>
-		<directive>--qos=standard </directive>
-		<directive>--partition=power9 </directive>
+		<directive>--partition=volta-x86 </directive>
 	</directives>
 	<queues>
 		<queue walltimemax="01:00:00" default="true">standard</queue>
 	</queues>
   </batch_system>
 
-  <batch_system MACH="darwin-p8" type="slurm" >
+  <batch_system MACH="darwin-p8" type="darwin_slurm" >
 	<directives>
 		<directive>--nodes={{ num_nodes }}</directive>
 		<directive>--ntasks-per-node={{ tasks_per_node }}</directive>
-		<directive>--qos=standard </directive>
-		<directive>--partition=power8+ </directive>
+		<directive>--partition=general --constraint="gpu1_model:Tesla_P100-PCIE-16GB"</directive>
 	</directives>
 	<queues>
 		<queue walltimemax="01:00:00" default="true">standard</queue>

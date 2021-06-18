@@ -2375,7 +2375,7 @@
     <CCSM_CPRNC>/turquoise/usr/projects/climate/SHARED_CLIMATE/software/wolf/cprnc/v0.40/cprnc</CCSM_CPRNC>
     <GMAKE_J>4</GMAKE_J>
     <TESTS>e3sm_developer</TESTS>
-    <BATCH_SYSTEM>slurm</BATCH_SYSTEM>
+    <BATCH_SYSTEM>darwin_slurm</BATCH_SYSTEM>
     <SUPPORTED_BY>none</SUPPORTED_BY>
     <MAX_TASKS_PER_NODE>20</MAX_TASKS_PER_NODE>
     <MAX_MPITASKS_PER_NODE>20</MAX_MPITASKS_PER_NODE>
@@ -2390,9 +2390,17 @@
       <executable/>
     </mpirun>
     <module_system type="module">
-      <modules>
+      <init_path lang="perl">/usr/share/Modules/init/perl.pm</init_path>
+      <init_path lang="python">/usr/share/Modules/init/python.py</init_path>
+      <init_path lang="csh">/etc/profile.d/modules.csh</init_path>
+      <init_path lang="sh">/etc/profile.d/modules.sh</init_path>
+      <cmd_path lang="perl"> /usr/bin/modulecmd  perl</cmd_path>
+      <cmd_path lang="python">/usr/bin/modulecmd python</cmd_path>
+      <cmd_path lang="sh">module</cmd_path>
+      <cmd_path lang="csh">module</cmd_path>
+    <modules>
         <command name="purge"/>
-	<command name="load">python/3.5.1</command>
+	<command name="load">anaconda/Anaconda3.2019.03</command>
         <command name="load">cmake/3.17.3</command>
       </modules>
       <modules compiler="pgi" mpilib="openmpi">
@@ -2406,7 +2414,7 @@
       <env name="PNETCDF_PATH">/home/lvanroekel/local/env-mpas-pgi</env>
       <env name="NETCDF_PATH">/home/lvanroekel/local/env-mpas-pgi</env>
       <env name="LD_LIBRARY_PATH">/home/lvanroekel/local/env-mpas-pgi/lib:$ENV{LD_LIBRARY_PATH}</env>
-      <env name="PATH">/projects/insituinf/Julia_insitu/Install/perl-5.32.0/bin:/home/lvanroekel/local/env-mpas-pgi/bin:$ENV{PATH}</env>
+      <env name="PATH">/home/lvanroekel/P100perl/bin:/home/lvanroekel/local/env-mpas-pgi/bin:$ENV{PATH}</env>
     </environment_variables>
   </machine>
 
@@ -2425,7 +2433,7 @@
     <CCSM_CPRNC>/turquoise/usr/projects/climate/SHARED_CLIMATE/software/wolf/cprnc/v0.40/cprnc</CCSM_CPRNC>
     <GMAKE_J>4</GMAKE_J>
     <TESTS>e3sm_developer</TESTS>
-    <BATCH_SYSTEM>slurm</BATCH_SYSTEM>
+    <BATCH_SYSTEM>darwin_slurm</BATCH_SYSTEM>
     <SUPPORTED_BY>none</SUPPORTED_BY>
     <MAX_TASKS_PER_NODE>40</MAX_TASKS_PER_NODE>
     <MAX_MPITASKS_PER_NODE>40</MAX_MPITASKS_PER_NODE>
@@ -2440,9 +2448,17 @@
       <executable/>
     </mpirun>
     <module_system type="module">
+      <init_path lang="perl">/usr/share/Modules/init/perl.pm</init_path>
+      <init_path lang="python">/usr/share/Modules/init/python.py</init_path>
+      <init_path lang="csh">/etc/profile.d/modules.csh</init_path>
+      <init_path lang="sh">/etc/profile.d/modules.sh</init_path>
+      <cmd_path lang="perl"> /usr/bin/modulecmd  perl</cmd_path>
+      <cmd_path lang="python">/usr/bin/modulecmd python</cmd_path>
+      <cmd_path lang="sh">module</cmd_path>
+      <cmd_path lang="csh">module</cmd_path>
       <modules>
         <command name="purge"/>
-	<command name="load">python/3.5.1</command>
+	<command name="load">anaconda/Anaconda3.2019.10</command>
         <command name="load">cmake/3.17.3</command>
       </modules>
       <modules compiler="pgi" mpilib="openmpi">
@@ -2456,7 +2472,7 @@
       <env name="PNETCDF_PATH">/home/lvanroekel/local/env-mpas-pgi</env>
       <env name="NETCDF_PATH">/home/lvanroekel/local/env-mpas-pgi</env>
       <env name="LD_LIBRARY_PATH">/home/lvanroekel/local/env-mpas-pgi/lib:$ENV{LD_LIBRARY_PATH}</env>
-      <env name="PATH">/projects/insituinf/Julia_insitu/Install/perl-5.32.0/bin:/home/lvanroekel/local/env-mpas-pgi/bin:$ENV{PATH}</env>
+      <env name="PATH">/home/lvanroekel/voltaPerl/bin:home/lvanroekel/local/env-mpas-pgi/bin:$ENV{PATH}</env>
     </environment_variables>
   </machine>
 

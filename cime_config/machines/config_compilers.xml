@@ -929,8 +929,8 @@ flags should be captured within MPAS CMake files.
     <append DEBUG="FALSE"> -O2 </append>
   </FFLAGS>
   <SLIBS>
-    <append>/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
-    <append>/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
+    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
+    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
   </SLIBS>
   <SUPPORTS_CXX>TRUE</SUPPORTS_CXX>
   <CXX_LINKER>FORTRAN</CXX_LINKER>
@@ -957,8 +957,8 @@ flags should be captured within MPAS CMake files.
     <append DEBUG="FALSE"> -O2 </append>
   </FFLAGS>
   <SLIBS>
-    <append>/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
-    <append>/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
+    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
+    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
   </SLIBS>
   <SUPPORTS_CXX>TRUE</SUPPORTS_CXX>
   <CXX_LINKER>FORTRAN</CXX_LINKER>
@@ -970,7 +970,7 @@ flags should be captured within MPAS CMake files.
   <PNETCDF_PATH>/home/lvanroekel/local/env-mpas-pgi</PNETCDF_PATH>
 </compiler>
 
-compiler MACH="darwin-p8" COMPILER="pgigpu">
+<compiler MACH="darwin-p8" COMPILER="pgigpu">
   <CONFIG_ARGS>
     <base> --host=Linux </base>
   </CONFIG_ARGS>
@@ -992,8 +992,8 @@ compiler MACH="darwin-p8" COMPILER="pgigpu">
     <append> -Minline -ta=tesla:cc60 -Mcuda -Minfo=accel </append>
   </LDFLAGS>
   <SLIBS>
-    <append>/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
-    <append>/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
+    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
+    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
   </SLIBS>
   <SUPPORTS_CXX>TRUE</SUPPORTS_CXX>
   <CXX_LINKER>FORTRAN</CXX_LINKER>
@@ -1027,8 +1027,8 @@ compiler MACH="darwin-p8" COMPILER="pgigpu">
     <append> -Minline -ta=tesla:ccall,fastmath,loadcache:L1,unroll,fma,managed,deepcopy,nonvvm -Mcuda -Minfo=accel </append>
   </LDFLAGS>
   <SLIBS>
-    <append>/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
-    <append>/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
+    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
+    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
   </SLIBS>
   <SUPPORTS_CXX>TRUE</SUPPORTS_CXX>
   <CXX_LINKER>FORTRAN</CXX_LINKER>

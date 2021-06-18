@@ -472,6 +472,28 @@
 	</queues>
   </batch_system>
 
+  <batch_system MACH="kodiak_debug" type="slurm" >
+	<directives>
+		<directive>--nodes={{ num_nodes }}</directive>
+		<directive>--ntasks-per-node={{ tasks_per_node }}</directive>
+		<directive>--qos=debug --reservation=debug </directive>
+	</directives>
+	<queues>
+		<queue walltimemax="02:00:00" nodemin="1" nodemax="4" default="true">standard</queue>
+	</queues>
+  </batch_system>
+  
+  <batch_system MACH="kodiak" type="slurm" >
+	<directives>
+		<directive>--nodes={{ num_nodes }}</directive>
+		<directive>--ntasks-per-node={{ tasks_per_node }}</directive>
+		<directive>--qos=standard </directive>
+	</directives>
+	<queues>
+		<queue walltimemax="16:00:00" default="true">standard</queue>
+	</queues>
+  </batch_system>
+
   <batch_system MACH="grizzly" type="slurm" >
 	<directives>
 		<directive>--nodes={{ num_nodes }}</directive>

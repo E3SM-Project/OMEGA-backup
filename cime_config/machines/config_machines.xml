@@ -2280,6 +2280,139 @@
     </environment_variables>
   </machine>
 
+  <machine MACH="kodiak_debug">
+    <DESC>LANL Linux Cluster, 36 pes/node, batch system slurm</DESC>
+    <NODENAME_REGEX>ko-fe.*.lanl.gov</NODENAME_REGEX>
+    <OS>LINUX</OS>
+    <COMPILERS>pgi,pgigpu</COMPILERS>
+    <MPILIBS>openmpi</MPILIBS>
+    <PROJECT>j20_isti</PROJECT>
+    <CIME_OUTPUT_ROOT>/lustre/scratch4/turquoise/$ENV{USER}/E3SM/scratch</CIME_OUTPUT_ROOT>
+    <DIN_LOC_ROOT>/lustre/scratch3/turquoise/$ENV{USER}/E3SM/input_data</DIN_LOC_ROOT>
+    <DIN_LOC_ROOT_CLMFORC>/lustre/scratch3/turquoise/$ENV{USER}/E3SM/input_data/atm/datm7</DIN_LOC_ROOT_CLMFORC>
+    <DOUT_S_ROOT>/lustre/scratch3/turquoise/$ENV{USER}/E3SM/archive/$CASE</DOUT_S_ROOT>
+    <BASELINE_ROOT>/lustre/scratch3/turquoise/$ENV{USER}/E3SM/input_data/ccsm_baselines/$COMPILER</BASELINE_ROOT>
+    <GMAKE_J>4</GMAKE_J>
+    <TESTS>e3sm_developer</TESTS>
+    <BATCH_SYSTEM>slurm</BATCH_SYSTEM>
+    <SUPPORTED_BY>luke.vanroekel @ gmail.com</SUPPORTED_BY>
+    <MAX_TASKS_PER_NODE>36</MAX_TASKS_PER_NODE>
+    <MAX_MPITASKS_PER_NODE>32</MAX_MPITASKS_PER_NODE>
+    <PROJECT_REQUIRED>TRUE</PROJECT_REQUIRED>
+    <mpirun mpilib="default">
+      <executable>srun</executable>
+      <arguments>
+        <arg name="num_tasks"> -n {{ total_tasks }}</arg>
+      </arguments>
+    </mpirun>
+    <mpirun mpilib="mpi-serial">
+      <executable/>
+    </mpirun>
+    <module_system type="module">
+      <init_path lang="perl">/usr/share/Modules/init/perl.pm</init_path>
+      <init_path lang="python">/usr/share/Modules/init/python.py</init_path>
+      <init_path lang="sh">/etc/profile.d/z00_lmod.sh</init_path>
+      <init_path lang="csh">/etc/profile.d/z00_lmod.csh</init_path>
+      <cmd_path lang="perl">/usr/share/lmod/lmod/libexec/lmod perl</cmd_path>
+      <cmd_path lang="python">/usr/share/lmod/lmod/libexec/lmod python</cmd_path>
+      <cmd_path lang="sh">module</cmd_path>
+      <cmd_path lang="csh">module</cmd_path>
+      <modules>
+        <command name="purge"/>
+		<command name="use">/usr/projects/climate/SHARED_CLIMATE/modulefiles/all</command>
+        <command name="load">cmake/3.19.2</command>
+      </modules>
+      <modules compiler="pgi" mpilib="openmpi">
+		<command name="load">pgi/19.10</command>
+        <command name="load">openmpi/3.1.6</command>
+      </modules>
+	  <modules compiler="pgigpu">
+		<command name="load">pgi/19.10</command>
+        <command name="load">openmpi/3.1.6</command>
+		<command name="load">cudatoolkit/11.0</command>
+	  </modules>
+      <modules>
+        <command name="load">hdf5-parallel/1.10.5</command>
+        <command name="load">parallel-netcdf/1.12.0</command>
+        <command name="load">netcdf-h5parallel/4.4.0</command>
+      </modules>
+    </module_system>
+    <RUNDIR>$CIME_OUTPUT_ROOT/$CASE/run</RUNDIR>
+    <EXEROOT>$CIME_OUTPUT_ROOT/$CASE/bld</EXEROOT>
+    <environment_variables>
+      <env name="PNETCDF_PATH">$ENV{PNETCDF_PATH}</env>
+      <env name="NETCDF_PATH">$ENV{NETCDF_PATH}</env>
+      <env name="PNETCDF_HINTS">romio_ds_write=disable;romio_ds_read=disable;romio_cb_write=enable;romio_cb_read=enable</env>
+    </environment_variables>
+  </machine>
+
+
+  <machine MACH="kodiak">
+    <DESC>LANL Linux Cluster, 36 pes/node, batch system slurm</DESC>
+    <NODENAME_REGEX>ko-fe.*.lanl.gov</NODENAME_REGEX>
+    <OS>LINUX</OS>
+    <COMPILERS>pgi,pgigpu</COMPILERS>
+    <MPILIBS>openmpi</MPILIBS>
+    <PROJECT>j20_isti</PROJECT>
+    <CIME_OUTPUT_ROOT>/lustre/scratch4/turquoise/$ENV{USER}/E3SM/scratch</CIME_OUTPUT_ROOT>
+    <DIN_LOC_ROOT>/lustre/scratch3/turquoise/$ENV{USER}/E3SM/input_data</DIN_LOC_ROOT>
+    <DIN_LOC_ROOT_CLMFORC>/lustre/scratch3/turquoise/$ENV{USER}/E3SM/input_data/atm/datm7</DIN_LOC_ROOT_CLMFORC>
+    <DOUT_S_ROOT>/lustre/scratch3/turquoise/$ENV{USER}/E3SM/archive/$CASE</DOUT_S_ROOT>
+    <BASELINE_ROOT>/lustre/scratch3/turquoise/$ENV{USER}/E3SM/input_data/ccsm_baselines/$COMPILER</BASELINE_ROOT>
+    <GMAKE_J>4</GMAKE_J>
+    <TESTS>e3sm_developer</TESTS>
+    <BATCH_SYSTEM>slurm</BATCH_SYSTEM>
+    <SUPPORTED_BY>luke.vanroekel @ gmail.com</SUPPORTED_BY>
+    <MAX_TASKS_PER_NODE>36</MAX_TASKS_PER_NODE>
+    <MAX_MPITASKS_PER_NODE>32</MAX_MPITASKS_PER_NODE>
+    <PROJECT_REQUIRED>TRUE</PROJECT_REQUIRED>
+    <mpirun mpilib="default">
+      <executable>srun</executable>
+      <arguments>
+        <arg name="num_tasks"> -n {{ total_tasks }}</arg>
+      </arguments>
+    </mpirun>
+    <mpirun mpilib="mpi-serial">
+      <executable/>
+    </mpirun>
+    <module_system type="module">
+      <init_path lang="perl">/usr/share/Modules/init/perl.pm</init_path>
+      <init_path lang="python">/usr/share/Modules/init/python.py</init_path>
+      <init_path lang="sh">/etc/profile.d/z00_lmod.sh</init_path>
+      <init_path lang="csh">/etc/profile.d/z00_lmod.csh</init_path>
+      <cmd_path lang="perl">/usr/share/lmod/lmod/libexec/lmod perl</cmd_path>
+      <cmd_path lang="python">/usr/share/lmod/lmod/libexec/lmod python</cmd_path>
+      <cmd_path lang="sh">module</cmd_path>
+      <cmd_path lang="csh">module</cmd_path>
+      <modules>
+        <command name="purge"/>
+		<command name="use">/usr/projects/climate/SHARED_CLIMATE/modulefiles/all</command>
+        <command name="load">cmake/3.19.2</command>
+      </modules>
+      <modules compiler="pgi" mpilib="openmpi">
+		<command name="load">pgi/19.10</command>
+        <command name="load">openmpi/3.1.6</command>
+      </modules>
+	  <modules compiler="pgigpu">
+		<command name="load">pgi/19.10</command>
+        <command name="load">openmpi/3.1.6</command>
+		<command name="load">cudatoolkit/11.0</command>
+	  </modules>
+      <modules>
+        <command name="load">hdf5-parallel/1.10.5</command>
+        <command name="load">parallel-netcdf/1.12.0</command>
+        <command name="load">netcdf-h5parallel/4.4.0</command>
+      </modules>
+    </module_system>
+    <RUNDIR>$CIME_OUTPUT_ROOT/$CASE/run</RUNDIR>
+    <EXEROOT>$CIME_OUTPUT_ROOT/$CASE/bld</EXEROOT>
+    <environment_variables>
+      <env name="PNETCDF_PATH">$ENV{PNETCDF_PATH}</env>
+      <env name="NETCDF_PATH">$ENV{NETCDF_PATH}</env>
+      <env name="PNETCDF_HINTS">romio_ds_write=disable;romio_ds_read=disable;romio_cb_write=enable;romio_cb_read=enable</env>
+    </environment_variables>
+  </machine>
+
   <machine MACH="grizzly">
     <DESC>LANL Linux Cluster, 36 pes/node, batch system slurm</DESC>
     <NODENAME_REGEX>gr-fe.*.lanl.gov</NODENAME_REGEX>
@@ -2407,6 +2540,11 @@
         <command name="load">pgi/18.10</command>
         <command name="load">openmpi/3.1.3-pgi_18.10</command>
       </modules>
+	  <modules compiler="pgigpu">
+	    <command name="load">pgi/18.10</command>
+        <command name="load">openmpi/3.1.3-pgi_18.10</command>
+		<command name="load">cuda/9.2</command>
+	  </modules>
     </module_system>
     <RUNDIR>$CIME_OUTPUT_ROOT/$CASE/run</RUNDIR>
     <EXEROOT>$CIME_OUTPUT_ROOT/$CASE/bld</EXEROOT>
@@ -2461,6 +2599,9 @@
 	<command name="load">anaconda/Anaconda3.2019.10</command>
         <command name="load">cmake/3.17.3</command>
       </modules>
+	  <modules>
+		<command name="load">cuda/9.2</command>
+	  </modules>
       <modules compiler="pgi" mpilib="openmpi">
         <command name="load">pgi/18.10</command>
         <command name="load">openmpi/3.1.3-pgi_18.10</command>

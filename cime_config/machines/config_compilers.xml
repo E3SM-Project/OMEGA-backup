@@ -956,17 +956,20 @@ flags should be captured within MPAS CMake files.
   <FFLAGS>
     <append DEBUG="FALSE"> -O2 </append>
   </FFLAGS>
+  <FFLAGS>
+    <append DEBUG="TRUE"> -g </append>
+  </FFLAGS>
   <SLIBS>
-    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
-    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
+    <append>$SHELL{nf-config --flibs} -llapack -lblas </append>
+    <append>$SHELL{nc-config --libs} </append>
   </SLIBS>
   <SUPPORTS_CXX>TRUE</SUPPORTS_CXX>
   <CXX_LINKER>FORTRAN</CXX_LINKER>
   <CXX_LIBS>
     <base>-lstdc++</base>
   </CXX_LIBS>
-  <NETCDF_C_PATH>$ENV{NETCDF_PATH}</NETCDF_C_PATH>
-  <NETCDF_FORTRAN_PATH>$ENV{NETCDF_PATH}</NETCDF_FORTRAN_PATH>
+  <NETCDF_C_PATH>/usr/projects/hpcsoft/toss3/kodiak/netcdf/4.4.0_pgi-19.10_openmpi-3.1.6</NETCDF_C_PATH>
+  <NETCDF_FORTRAN_PATH>/usr/projects/hpcsoft/toss3/kodiak/netcdf/4.4.0_pgi-19.10_openmpi-3.1.6</NETCDF_FORTRAN_PATH>
   <PNETCDF_PATH>$ENV{PNETCDF_PATH}</PNETCDF_PATH>
 </compiler>
 
@@ -980,28 +983,28 @@ flags should be captured within MPAS CMake files.
   </CPPDEFS>
   <PIO_FILESYSTEM_HINTS>lustre</PIO_FILESYSTEM_HINTS>
   <CFLAGS>
-    <append DEBUG="FALSE"> -O2 -Mvect=nosimd </append>
+    <append DEBUG="FALSE"> -O2 -DSUMMITDEV_PGI </append>
   </CFLAGS>
   <FFLAGS>
-    <append DEBUG="FALSE"> -O2 -Mvect=nosimd -DSUMMITDEV_PGI -DHAVE_IEEE_ARITHMETIC -DNO_R16 </append>
+    <append DEBUG="FALSE"> -O2 </append>
   </FFLAGS>
   <FFLAGS>
-    <append DEBUG="TRUE"> -DSUMMITDEV_PGI -DHAVE_IEEE_ARITHMETIC -DNO_R16 </append>
+    <append DEBUG="TRUE"> -g -Minfo=all </append>
   </FFLAGS>
   <LDFLAGS>
     <append> -Minline -ta=tesla:cc60 -Mcuda -Minfo=accel </append>
   </LDFLAGS>
   <SLIBS>
-    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
-    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
+    <append>$SHELL{nf-config --flibs} -llapack -lblas </append>
+    <append>$SHELL{nc-config --libs} </append>
   </SLIBS>
   <SUPPORTS_CXX>TRUE</SUPPORTS_CXX>
   <CXX_LINKER>FORTRAN</CXX_LINKER>
   <CXX_LIBS>
     <base>-lstdc++</base>
   </CXX_LIBS>
-  <NETCDF_C_PATH>$ENV{NETCDF_PATH}</NETCDF_C_PATH>
-  <NETCDF_FORTRAN_PATH>$ENV{NETCDF_PATH}</NETCDF_FORTRAN_PATH>
+  <NETCDF_C_PATH>/usr/projects/hpcsoft/toss3/kodiak/netcdf/4.4.0_pgi-19.10_openmpi-3.1.6</NETCDF_C_PATH>
+  <NETCDF_FORTRAN_PATH>/usr/projects/hpcsoft/toss3/kodiak/netcdf/4.4.0_pgi-19.10_openmpi-3.1.6</NETCDF_FORTRAN_PATH>
   <PNETCDF_PATH>$ENV{PNETCDF_PATH}</PNETCDF_PATH>
 </compiler>
 
@@ -1019,17 +1022,20 @@ flags should be captured within MPAS CMake files.
   <FFLAGS>
     <append DEBUG="FALSE"> -O2 </append>
   </FFLAGS>
+  <FFLAGS>
+    <append DEBUG="TRUE"> -g </append>
+  </FFLAGS>
   <SLIBS>
-    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
-    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
+    <append>$SHELL{nf-config --flibs} -llapack -lblas </append>
+    <append>$SHELL{nc-config --libs} </append>
   </SLIBS>
   <SUPPORTS_CXX>TRUE</SUPPORTS_CXX>
   <CXX_LINKER>FORTRAN</CXX_LINKER>
   <CXX_LIBS>
     <base>-lstdc++</base>
   </CXX_LIBS>
-  <NETCDF_C_PATH>$ENV{NETCDF_PATH}</NETCDF_C_PATH>
-  <NETCDF_FORTRAN_PATH>$ENV{NETCDF_PATH}</NETCDF_FORTRAN_PATH>
+  <NETCDF_C_PATH>/usr/projects/hpcsoft/toss3/kodiak/netcdf/4.4.0_pgi-19.10_openmpi-3.1.6</NETCDF_C_PATH>
+  <NETCDF_FORTRAN_PATH>/usr/projects/hpcsoft/toss3/kodiak/netcdf/4.4.0_pgi-19.10_openmpi-3.1.6</NETCDF_FORTRAN_PATH>
   <PNETCDF_PATH>$ENV{PNETCDF_PATH}</PNETCDF_PATH>
 </compiler>
 
@@ -1043,28 +1049,28 @@ flags should be captured within MPAS CMake files.
   </CPPDEFS>
   <PIO_FILESYSTEM_HINTS>lustre</PIO_FILESYSTEM_HINTS>
   <CFLAGS>
-    <append DEBUG="FALSE"> -O2 -Mvect=nosimd </append>
+    <append DEBUG="FALSE"> -O2 -DSUMMITDEV_PGI </append>
   </CFLAGS>
   <FFLAGS>
-    <append DEBUG="FALSE"> -O2 -Mvect=nosimd -DSUMMITDEV_PGI -DHAVE_IEEE_ARITHMETIC -DNO_R16 </append>
+    <append DEBUG="FALSE"> -O2 -DSUMMITDEV_PGI </append>
   </FFLAGS>
   <FFLAGS>
-    <append DEBUG="TRUE"> -DSUMMITDEV_PGI -DHAVE_IEEE_ARITHMETIC -DNO_R16 </append>
+    <append DEBUG="TRUE"> -DSUMMITDEV_PGI -g </append>
   </FFLAGS>
   <LDFLAGS>
     <append> -Minline -ta=tesla:cc60 -Mcuda -Minfo=accel </append>
   </LDFLAGS>
   <SLIBS>
-    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nf-config --flibs} -llapack -lblas </append>
-    <append>$SHELL{/home/lvanroekel/local/env-mpas-pgi/bin/nc-config --libs} </append>
+    <append>$SHELL{nf-config --flibs} -llapack -lblas </append>
+    <append>$SHELL{nc-config --libs} </append>
   </SLIBS>
   <SUPPORTS_CXX>TRUE</SUPPORTS_CXX>
   <CXX_LINKER>FORTRAN</CXX_LINKER>
   <CXX_LIBS>
     <base>-lstdc++</base>
   </CXX_LIBS>
-  <NETCDF_C_PATH>$ENV{NETCDF_PATH}</NETCDF_C_PATH>
-  <NETCDF_FORTRAN_PATH>$ENV{NETCDF_PATH}</NETCDF_FORTRAN_PATH>
+  <NETCDF_C_PATH>/usr/projects/hpcsoft/toss3/kodiak/netcdf/4.4.0_pgi-19.10_openmpi-3.1.6</NETCDF_C_PATH>
+  <NETCDF_FORTRAN_PATH>/usr/projects/hpcsoft/toss3/kodiak/netcdf/4.4.0_pgi-19.10_openmpi-3.1.6</NETCDF_FORTRAN_PATH>
   <PNETCDF_PATH>$ENV{PNETCDF_PATH}</PNETCDF_PATH>
 </compiler>
 

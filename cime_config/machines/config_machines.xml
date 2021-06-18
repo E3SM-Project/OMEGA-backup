@@ -2341,7 +2341,7 @@
     <EXEROOT>$CIME_OUTPUT_ROOT/$CASE/bld</EXEROOT>
     <environment_variables>
       <env name="PNETCDF_PATH">$ENV{PNETCDF_PATH}</env>
-      <env name="NETCDF_PATH">$ENV{NETCDF_PATH}</env>
+	  <env name="NETCDF_PATH">/usr/projects/hpcsoft/toss3/kodiak/netcdf/4.4.0_pgi-19.10_openmpi-3.1.6</env>
       <env name="PNETCDF_HINTS">romio_ds_write=disable;romio_ds_read=disable;romio_cb_write=enable;romio_cb_read=enable</env>
     </environment_variables>
   </machine>
@@ -2408,7 +2408,7 @@
     <EXEROOT>$CIME_OUTPUT_ROOT/$CASE/bld</EXEROOT>
     <environment_variables>
       <env name="PNETCDF_PATH">$ENV{PNETCDF_PATH}</env>
-      <env name="NETCDF_PATH">$ENV{NETCDF_PATH}</env>
+	  <env name="NETCDF_PATH">/usr/projects/hpcsoft/toss3/kodiak/netcdf/4.4.0_pgi-19.10_openmpi-3.1.6</env>
       <env name="PNETCDF_HINTS">romio_ds_write=disable;romio_ds_read=disable;romio_cb_write=enable;romio_cb_read=enable</env>
     </environment_variables>
   </machine>

@@ -1333,7 +1333,7 @@ contains
        call seq_comm_getinfo(OCNID(ens1), mpicom=mpicom_OCNID)
 
        call shr_scam_checkSurface(scmlon, scmlat, &
-            scm_multcols,scm_nx,scm_ny,           &
+            .false., & 
             OCNID(ens1), mpicom_OCNID,            &
             lnd_present=lnd_present,              &
             ocn_present=ocn_present,              &

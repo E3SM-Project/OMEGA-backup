@@ -476,7 +476,7 @@
 	<directives>
 		<directive>--nodes={{ num_nodes }}</directive>
 		<directive>--ntasks-per-node={{ tasks_per_node }}</directive>
-		<directive>--qos=debug --reservation=debug </directive>
+		<directive>--qos=interactive</directive>
 	</directives>
 	<queues>
 		<queue walltimemax="02:00:00" nodemin="1" nodemax="4" default="true">standard</queue>

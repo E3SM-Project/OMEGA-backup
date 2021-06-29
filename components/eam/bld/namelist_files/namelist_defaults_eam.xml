@@ -142,6 +142,7 @@
 <!-- ieflx_opt 0: atmonly, 3: coupled -->
 <ieflx_opt  ocn="docn" >0</ieflx_opt>
 <ieflx_opt  ocn="mpaso" >3</ieflx_opt>
+<ieflx_opt  ocn="omega" >3</ieflx_opt>
 
 <!-- Bulk aerosol physical properties (includes optics) -->
 

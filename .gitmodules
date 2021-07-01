@@ -29,9 +29,9 @@
 	url = git@github.com:CFMIP/COSPv2.0.git
 	branch = CESM_v2.1.4
 [submodule "cime"]
-        path = cime
-        url = git@github.com:ESMCI/cime.git
-        branch = jonbob/e3sm/support-add-ww3
+	path = cime
+	url = git@github.com:vanroekel/cime.git
+	branch = omega
 [submodule "externals/YAKL"]
 	path = externals/YAKL
 	url = git@github.com:mrnorman/YAKL.git

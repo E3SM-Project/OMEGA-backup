@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+
+<compsets>
+
+  <help>
+  Compset format is explained in cime/config/e3sm/allactive/config_compsets.xml
+  or in the CIME documenation
+  </help>
+
+  <!-- E3SM C/G compsets -->
+
+  <compset>
+    <alias>COMEGA-NYF</alias>
+    <lname>2000_DATM%NYF_SLND_DICE%SSMI_OMEGA%DATMFORCED_DROF%NYF_SGLC_SWAV</lname>
+    <support_level>"Experimental, under development"</support_level>
+  </compset>
+
+  <compset>
+    <alias>COMEGA-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_DICE%IAF_OMEGA%DATMFORCED_DROF%IAF_SGLC_SWAV</lname>
+    <support_level>Experimental, under development</support_level>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-NYF</alias>
+    <lname>2000_DATM%NYF_SLND_MPASSI_OMEGA%DATMFORCED_DROF%NYF_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-NYF-ISMF</alias>
+    <lname>2000_DATM%NYF_SLND_MPASSI_OMEGA%ISMFDATMFORCED_DROF%NYFAIS45_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI_OMEGA%DATMFORCED_DROF%IAF_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-JRA</alias>
+    <lname>2000_DATM%JRA_SLND_MPASSI_OMEGA%DATMFORCED_DROF%JRA_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-JRA1p4</alias>
+    <lname>2000_DATM%JRA-1p4-2018_SLND_MPASSI_OMEGA%DATMFORCED_DROF%JRA-1p4-2018_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-JRA1p4-ISMF</alias>
+    <lname>2000_DATM%JRA-1p4-2018_SLND_MPASSI_OMEGA%ISMFDATMFORCED_DROF%JRA-1p4-2018-AIS0LIQ_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-JRA1p4-DIB</alias>
+    <lname>2000_DATM%JRA-1p4-2018_SLND_MPASSI%DIB_OMEGA%IBDATMFORCED_DROF%JRA-1p4-2018-AIS0ICE_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-JRA1p4-DIB-ISMF</alias>
+    <lname>2000_DATM%JRA-1p4-2018_SLND_MPASSI%DIB_OMEGA%IBISMFDATMFORCED_DROF%JRA-1p4-2018-AIS0ROF_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-IAF-ISMF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI_OMEGA%ISMFDATMFORCED_DROF%IAFAIS45_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-DIB-NYF</alias>
+    <lname>2000_DATM%NYF_SLND_MPASSI%DIB_OMEGA%IBDATMFORCED_DROF%NYFAIS55_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-DIB-NYF-ISMF</alias>
+    <lname>2000_DATM%NYF_SLND_MPASSI%DIB_OMEGA%IBISMFDATMFORCED_DROF%NYFAIS00_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-DIB-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI%DIB_OMEGA%IBDATMFORCED_DROF%IAFAIS55_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-DIB-IAF-ISMF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI%DIB_OMEGA%IBISMFDATMFORCED_DROF%IAFAIS00_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-MALI-DIB-IAF-ISMF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI%DIB_OMEGA%IBISMFCOREFORCED_DROF%IAFAIS00_MALI%SIASTATIC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-OECO-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI_OMEGA%OECO_DROF%IAF_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-OECO-ODMS-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI_OMEGA%OECOODMS_DROF%IAF_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-OECO-ODOC-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI_OMEGA%OECOODOC_DROF%IAF_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-OECO-ODMS-ODOC-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI_OMEGA%OECOODMSODOC_DROF%IAF_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-OIECO-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI%BGC_OMEGA%OIECO_DROF%IAF_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-OIECO-OIDMS-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI%BGC_OMEGA%OIECOOIDMS_DROF%IAF_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-OIECO-OIDOC-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI%BGC_OMEGA%OIECOOIDOC_DROF%IAF_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-OIECO-OIDMS-OIDOC-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_MPASSI%BGC_OMEGA%OIECOOIDMSOIDOC_DROF%IAF_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
+    <alias>GOMEGA-TOIECO-IAF</alias>
+    <lname>20TR_DATM%IAF_SLND_MPASSI%BGC_OMEGA%TOIECO_DROF%IAF_SGLC_SWAV</lname>
+  </compset>
+
+</compsets>

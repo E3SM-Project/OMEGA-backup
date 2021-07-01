@@ -226,7 +226,9 @@
       <value compset="_XATM.*_XLND.*_XICE.*_XOCN">CESM1_MOD</value>
       <value compset="_SOCN"                     >CESM1_MOD</value>
       <value compset="_MPASO"                    >CESM1_MOD</value>
+	  <value compset="_OMEGA"                    >CESM1_MOD</value>
       <value compset="_MPASSI.*_MPASO"           >RASM_OPTION1</value>
+	  <value compset="_MPASSI.*_OMEGA"           >RASM_OPTION1</value>
     </values>
     <group>run_coupling</group>
     <file>env_run.xml</file>
@@ -328,6 +330,11 @@
       <value compset="_EAM.*_ELM.*MPASO">day</value>
       <value compset="_EAM.*_ELM.*MPASO" grid="a%ne11np4">day</value>
       <value compset="_EAM.*_ELM.*MPASO" grid="a%ne120np4">day</value>
+      <value compset="_OMEGA"       >day</value>
+      <value compset="_DATM.*_SLND.*OMEGA.*_MALI">day</value>
+      <value compset="_EAM.*_ELM.*OMEGA">day</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne11np4">day</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne120np4">day</value>
     </values>
     <desc>Base period associated with NCPL coupling frequency.
     This xml variable is only used to set the driver namelist variables,
@@ -354,8 +361,30 @@
       <value compset="_DATM.*_CICE.*_DOCN">24</value>
       <value compset="_DATM.*_DOCN%US20">24</value>
       <value compset="_MPASO">48</value>
+	  <value compset="_OMEGA">48</value>
       <value compset="_DLND.*_MALI">1</value>
       <value compset="_SLND.*SOCN.*_MALI">1</value>
+      <value compset="_DATM.*_SLND.*OMEGA.*_MALI">24</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oQU480">12</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oQU240">12</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oQU240wLI">12</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oQU120">24</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oEC60to30">48</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oEC60to30v3">48</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oEC60to30wLI">48</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%ECwISC30to60E1r2">48</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%EC30to60E2r2">48</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%WC14to60E2r3">48</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oRRS30to10v3">96</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oRRS30to10wLI">96</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oRRS18to6v3">96</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oRRS15to5">96</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oARRM60to10">96</value>
+      <value compset="_DATM.*_SLND.*_OMEGA.*MPAS" grid="oi%oARRM60to6">96</value>
+      <value compset="_EAM.*_ELM.*OMEGA">48</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne11np4">12</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne120np4">96</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="oi%oARRM60to10">96</value>
       <value compset="_DATM.*_SLND.*MPASO.*_MALI">24</value>
       <value compset="_DATM.*_SLND.*MPAS" grid="oi%oQU480">12</value>
       <value compset="_DATM.*_SLND.*MPAS" grid="oi%oQU240">12</value>
@@ -427,6 +456,12 @@
       <value compset="_DLND.*_CISM\d">1</value>
       <value compset="_DLND.*_MALI">1</value>
       <value compset="_SLND.*SOCN.*_MALI">1</value>
+      <value compset="_DATM.*_SLND.*OMEGA.*_MALI">$ATM_NCPL</value>
+      <value compset="_EAM.*_ELM.*OMEGA">48</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne4np4">$ATM_NCPL</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne11np4">12</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne120np4">96</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="oi%oARRM60to10">96</value>
       <value compset="_DATM.*_SLND.*MPASO.*_MALI">$ATM_NCPL</value>
       <value compset="_EAM.*_ELM.*MPASO">48</value>
       <value compset="_EAM.*_ELM.*MPASO" grid="a%ne4np4">$ATM_NCPL</value>
@@ -448,6 +483,8 @@
       <value compset="_DLND.*_CISM\d">1</value>
       <value compset="_DLND.*_MALI">1</value>
       <value compset="_SLND.*SOCN.*_MALI">1</value>
+      <value compset="_DATM.*_SLND.*OMEGA.*_MALI">$ATM_NCPL</value>
+      <value compset="_EAM.*_ELM.*OMEGA">$ATM_NCPL</value>
       <value compset="_DATM.*_SLND.*MPASO.*_MALI">$ATM_NCPL</value>
       <value compset="_EAM.*_ELM.*MPASO">$ATM_NCPL</value>
     </values>
@@ -474,6 +511,23 @@
       <value compset="_DLND.*_CISM\d">1</value>
       <value compset="_DLND.*_MALI">1</value>
       <value compset="_SLND.*SOCN.*_MALI">1</value>
+      <value compset="_DATM.*_SLND.*OMEGA.*_MALI">24</value>
+      <value compset="_OMEGA" grid="oi%oQU480">6</value>
+      <value compset="_OMEGA" grid="oi%oQU240">12</value>
+      <value compset="_OMEGA" grid="oi%oQU240wLI">12</value>
+      <value compset="_OMEGA" grid="oi%oQU120">24</value>
+      <value compset="_OMEGA" grid="oi%oEC60to30">48</value>
+      <value compset="_OMEGA" grid="oi%oEC60to30v3">48</value>
+      <value compset="_OMEGA" grid="oi%oEC60to30wLI">48</value>
+      <value compset="_OMEGA" grid="oi%ECwISC30to60E1r2">48</value>
+      <value compset="_OMEGA" grid="oi%EC30to60E2r2">48</value>
+      <value compset="_OMEGA" grid="oi%WC14to60E2r3">48</value>
+      <value compset="_OMEGA" grid="oi%oRRS30to10v3">48</value>
+      <value compset="_OMEGA" grid="oi%oRRS30to10wLI">48</value>
+      <value compset="_OMEGA" grid="oi%oRRS18to6v3">48</value>
+      <value compset="_OMEGA" grid="oi%oRRS15to5">96</value>
+      <value compset="_OMEGA" grid="oi%oARRM60to10">48</value>
+      <value compset="_OMEGA" grid="oi%oARRM60to6">48</value>
       <value compset="_DATM.*_SLND.*MPASO.*_MALI">24</value>
       <value compset="_MPASO" grid="oi%oQU480">6</value>
       <value compset="_MPASO" grid="oi%oQU240">12</value>
@@ -507,6 +561,10 @@
       <value compset="_DLND.*_CISM\d">1</value>
       <value compset="_DLND.*_MALI">1</value>
       <value compset="_SLND.*SOCN.*_MALI">1</value>
+      <value compset="_DATM.*_SLND.*OMEGA.*_MALI">1</value>
+      <value compset="_EAM.*_ELM.*OMEGA">1</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne11np4">1</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne120np4">1</value>
       <value compset="_DATM.*_SLND.*MPASO.*_MALI">1</value>
       <value compset="_EAM.*_ELM.*MPASO">1</value>
       <value compset="_EAM.*_ELM.*MPASO" grid="a%ne11np4">1</value>
@@ -543,6 +601,7 @@
       <value compset=".+" grid="a%ne11np4">6</value>
       <value compset="_DATM.*_POP2.*_DROF">$ATM_NCPL</value>
       <value compset="_DATM.*_MPASO"           >$ATM_NCPL</value>
+	  <value compset="_DATM.*_OMEGA"           >$ATM_NCPL</value>
       <value compset="_DATM.*_DOCN%SOM">$ATM_NCPL</value>
       <value compset="_DATM.*_DLND.*_DICE.*_DOCN">$ATM_NCPL</value>
       <value compset="_DATM.*_SLND.*_DICE.*_DOCN">$ATM_NCPL</value>
@@ -552,6 +611,11 @@
       <value compset="_DLND.*_CISM\d">1</value>
       <value compset="_DLND.*_MALI">1</value>
       <value compset="_SLND.*SOCN.*_MALI">1</value>
+      <value compset="_DATM.*_SLND.*OMEGA.*_MALI">24</value>
+      <value compset="_EAM.*_ELM.*OMEGA">8</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne4np4">6</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne11np4">4</value>
+      <value compset="_EAM.*_ELM.*OMEGA" grid="a%ne120np4">8</value>
       <value compset="_DATM.*_SLND.*MPASO.*_MALI">24</value>
       <value compset="_EAM.*_ELM.*MPASO">8</value>
       <value compset="_EAM.*_ELM.*MPASO" grid="a%ne4np4">6</value>
@@ -674,6 +738,7 @@
       <value compset="DATM.*_POP\d"    >TRUE</value>
       <value compset="EAM.*_POP\d"     >TRUE</value>
       <value compset="EAM.*_MPASO"     >TRUE</value>
+	  <value compset="EAM.*_OMEGA"     >TRUE</value>
       <value compset="EAM.*_DOCN%SOM">TRUE</value>
     </values>
     <group>run_budgets</group>

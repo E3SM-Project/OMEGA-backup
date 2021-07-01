@@ -63,12 +63,17 @@ endif()
 # Include function definitions
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_util.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/build_mpas_model.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/build_omega.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/build_model.cmake)
 
 set(BUILDCONF ${CASEROOT}/Buildconf)
 
 # Do any MPAS builds first since they manage their own flags
-build_mpas_models()
+if ("omega" IN_LIST COMP_NAMES)
+  build_omega()
+else()
+  build_mpas_models()
+endif()
 
 # Set global cmake settings
 set(CMAKE_MODULE_PATH ${CIMEROOT}/src/CMake)
@@ -79,10 +84,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
 add_custom_target(genf90
   DEPENDS ${CIMEROOT}/src/externals/genf90/genf90.pl)
 
-# Build E3SM components
+# Build remaining E3SM components
 set(IDX 0)
 set(COMP_CLASSES cpl atm lnd ice ocn rof glc wav iac esp)
-set(MPAS_COMPS "mpaso" "mpassi" "mali")
+set(MPAS_COMPS "mpaso" "mpassi" "mali" "omega")
 foreach(COMP_NAME IN LISTS COMP_NAMES)
   list(GET COMP_CLASSES ${IDX} COMP_CLASS)
   if (NOT COMP_CLASS STREQUAL "cpl" AND NOT COMP_NAME IN_LIST MPAS_COMPS)

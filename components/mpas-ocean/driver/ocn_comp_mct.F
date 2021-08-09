@@ -1611,7 +1611,9 @@ contains
                                   landIceFreshwaterFluxField, &
                                   landIceHeatFluxField, &
                                   landIceFractionField, &
-                                  windSpeed10mField
+                                  windSpeed10mField, &
+                                  waveStokesDriftZonalField, &
+                                  waveStokesDriftMeridionalField
                                   !landIcePressureField
 
    type (field2DReal), pointer :: iceFluxPhytoCField, &
@@ -1646,7 +1648,9 @@ contains
                                                landIceFreshwaterFlux, &
                                                landIceHeatFlux, &
                                                landIceFraction, &
-                                               windSpeed10m
+                                               windSpeed10m, &
+                                               waveStokesDriftZonal, &
+                                               waveStokesDriftMeridional
                                                !landIcePressure
 
    real (kind=RKIND), dimension(:), pointer :: latCell
@@ -1722,6 +1726,8 @@ contains
       call mpas_pool_get_field(forcingPool, 'iceRunoffFlux', iceRunoffFluxField)
       call mpas_pool_get_field(forcingPool, 'removedRiverRunoffFlux', removedRiverRunoffFluxField)
       call mpas_pool_get_field(forcingPool, 'removedIceRunoffFlux', removedIceRunoffFluxField)
+      call mpas_pool_get_field(forcingPool, 'waveStokesDriftZonal', waveStokesDriftZonalField)
+      call mpas_pool_get_field(forcingPool, 'waveStokesDriftMeridional', waveStokesDriftMeridionalField)
 
       call mpas_pool_get_field(forcingPool, 'landIceFreshwaterFlux', landIceFreshwaterFluxField)
       call mpas_pool_get_field(forcingPool, 'landIceHeatFlux', landIceHeatFluxField)
@@ -1763,6 +1769,8 @@ contains
       landIceInterfaceTracers => landIceInterfaceTracersField % array
       landIceFraction => landIceFractionField % array
       windSpeed10m => windSpeed10mField % array
+      waveStokesDriftZonal => waveStokesDriftZonalField % array
+      waveStokesDriftMeridional => waveStokesDriftMeridionalField % array
       !landIcePressure => landIcePressureField % array
 
       call mpas_pool_get_array(meshPool, 'latCell', latCell)
@@ -1917,6 +1925,13 @@ contains
            iceFraction(i) = x2o_o % rAttr(index_x2o_Si_ifrac, n)
         end if
 
+        if ( waveStokesDriftZonalField % isActive ) then
+           waveStokesDriftZonal(i) = x2o_o % rAttr(index_x2o_Sw_ustokes, n)
+        end if
+        if ( waveStokesDriftMeridionalField % isActive ) then
+           waveStokesDriftMeridional(i) = x2o_o % rAttr(index_x2o_Sw_vstokes, n)
+        end if
+
         if (config_cvmix_kpp_use_theory_wave) then
            if ( windSpeed10mField% isActive ) then
               windSpeed10m(i) = sqrt( x2o_o % rAttr(index_x2o_So_duu10n, n))
@@ -2056,6 +2071,8 @@ contains
    call mpas_pool_get_field(forcingPool, 'atmosphericPressure', atmosphericPressureField)
    call mpas_pool_get_field(forcingPool, 'seaIcePressure', seaIcePressureField)
    call mpas_pool_get_field(forcingPool, 'iceFraction', iceFractionField)
+   call mpas_pool_get_field(forcingPool, 'waveStokesDriftZonal', waveStokesDriftZonalField)
+   call mpas_pool_get_field(forcingPool, 'waveStokesDriftMeridional', waveStokesDriftMeridionalField)
 
    call mpas_pool_get_field(forcingPool, 'landIceFreshwaterFlux', landIceFreshwaterFluxField)
    call mpas_pool_get_field(forcingPool, 'landIceHeatFlux', landIceHeatFluxField)
@@ -2158,6 +2175,12 @@ contains
    end if
    if ( iceFractionField % isActive ) then
       call mpas_dmpar_exch_halo_field(iceFractionField)
+   end if
+   if ( waveStokesDriftZonalField % isActive ) then
+      call mpas_dmpar_exch_halo_field(waveStokesDriftZonalField)
+   end if
+   if ( waveStokesDriftMeridionalField % isActive ) then
+      call mpas_dmpar_exch_halo_field(waveStokesDriftMeridionalField)
    end if
 
    if ( landIceFreshwaterFluxField % isActive ) then
@@ -2320,8 +2343,9 @@ contains
                                                avgOceanSurfaceDMSP, &
                                                avgOceanSurfaceDOCr, &
                                                avgOceanSurfaceFeParticulate, &
-                                               avgOceanSurfaceFeDissolved
-
+                                               avgOceanSurfaceFeDissolved, &
+                                               ssh
+ 
    real (kind=RKIND), dimension(:,:), pointer :: avgTracersSurfaceValue, avgSurfaceVelocity, &
                                                  avgOceanSurfacePhytoC, &
                                                  avgOceanSurfaceDOC, layerThickness
@@ -2371,6 +2395,7 @@ contains
      call mpas_pool_get_dimension(forcingPool, 'index_avgSurfaceVelocityZonal', index_avgZonalSurfaceVelocity)
      call mpas_pool_get_dimension(forcingPool, 'index_avgSurfaceVelocityMeridional', index_avgMeridionalSurfaceVelocity)
 
+     call mpas_pool_get_array(statePool, 'ssh', ssh)
      call mpas_pool_get_array(statePool, 'layerThickness', layerThickness, 1)
 
      call mpas_pool_get_array(forcingPool, 'landIceMask', landIceMask)
@@ -2429,6 +2454,7 @@ contains
        o2x_o % rAttr(index_o2x_So_u, n) = avgSurfaceVelocity(index_avgZonalSurfaceVelocity, i)
        o2x_o % rAttr(index_o2x_So_v, n) = avgSurfaceVelocity(index_avgMeridionalSurfaceVelocity, i)
 
+       o2x_o % rAttr(index_o2x_So_ssh, n)  = ssh(i)
        o2x_o % rAttr(index_o2x_So_dhdx, n) = filteredSSHGradientZonal(i)
        o2x_o % rAttr(index_o2x_So_dhdy, n) = filteredSSHGradientMeridional(i)
 

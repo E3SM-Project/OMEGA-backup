@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<definitions_variables>
+
+  <description>
+    <desc compset="_WW3" >Wave Watch III</desc>
+  </description>
+
+  <entry id="COMP_WAV">
+    <type>char</type>
+    <valid_values>ww3</valid_values>
+    <default_value>ww3</default_value>
+    <group>case_comp</group>
+    <file>env_case.xml</file>
+    <desc>Name of wave component</desc>
+  </entry>
+
+  <help>
+    =========================================
+    WW3 naming conventions
+    =========================================
+  </help>
+
+</definitions_variables>

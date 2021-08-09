@@ -21,6 +21,7 @@ module mpaso_cpl_indices
   integer :: index_o2x_Faoo_h2otemp
   integer :: index_o2x_Faoo_fco2_ocn
   integer :: index_o2x_Faoo_fdms_ocn
+  integer :: index_o2x_So_ssh
 
   ! ocn -> drv for calculation of ocean-ice sheet interactions
 
@@ -98,6 +99,8 @@ module mpaso_cpl_indices
   integer :: index_x2o_Faxa_dstdry4    ! flux: Size 4 dust -- dry deposition
   integer :: index_x2o_Foxx_rofl       ! river runoff flux                (kg/m2/s)
   integer :: index_x2o_Foxx_rofi       ! ice runoff flux                  (kg/m2/s)
+  integer :: index_x2o_Sw_ustokes      ! Stokes drift 
+  integer :: index_x2o_Sw_vstokes      ! Stokes drift 
 
   ! drv -> glc and internal drv fields
 
@@ -158,6 +161,7 @@ contains
     index_o2x_Faoo_h2otemp  = mct_avect_indexra(o2x,'Faoo_h2otemp',perrWith='quiet')
     index_o2x_Faoo_fco2_ocn = mct_avect_indexra(o2x,'Faoo_fco2_ocn',perrWith='quiet')
     index_o2x_Faoo_fdms_ocn = mct_avect_indexra(o2x,'Faoo_fdms_ocn',perrWith='quiet')
+    index_o2x_So_ssh        = mct_avect_indexra(o2x,'So_ssh')
 
     index_o2x_So_blt        = mct_avect_indexra(o2x,'So_blt')
     index_o2x_So_bls        = mct_avect_indexra(o2x,'So_bls')
@@ -258,6 +262,9 @@ contains
     index_x2o_Sg_icemask = mct_avect_indexra(x2o,'Sg_icemask')
     index_x2o_Sg_icemask = mct_avect_indexra(x2o,'Sg_icemask_grounded')
     index_x2o_Sg_icemask = mct_avect_indexra(x2o,'Sg_icemask_floating')
+
+    index_x2o_Sw_ustokes        = mct_avect_indexra(x2o,'Sw_ustokes')
+    index_x2o_Sw_vstokes        = mct_avect_indexra(x2o,'Sw_vstokes')
 
     call mct_aVect_clean(x2o)
     call mct_aVect_clean(o2x)

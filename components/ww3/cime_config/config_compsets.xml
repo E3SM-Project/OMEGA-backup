@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<compsets>
+
+  <help>
+  Compset format is explained in cime/config/e3sm/allactive/config_compsets.xml
+  or in the CIME documenation
+  </help>
+
+  <!-- Waves compsets -->
+
+  <compset>
+    <alias>AWAV-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_SICE_SOCN_SROF_SGLC_WW3</lname>
+  </compset>
+
+  <compset>
+    <alias>UWAV-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_SICE_SOCN_SROF_SGLC_WW3</lname>
+  </compset>
+
+  <compset>
+    <alias>UWAV-CFSv2</alias>
+    <lname>2000_DATM%CFSv2_SLND_SICE_SOCN_SROF_SGLC_WW3</lname>
+  </compset>
+
+  <compset>
+    <alias>UWAV-CFSR</alias>
+    <lname>2000_DATM%CFSR_SLND_SICE_SOCN_SROF_SGLC_WW3</lname>
+  </compset>
+
+  <compset>
+    <alias>GWAV-IAF</alias>
+    <lname>2000_DATM%IAF_SLND_SICE_MPASO%DATMFORCED_SROF_SGLC_WW3</lname>
+  </compset>
+
+</compsets>

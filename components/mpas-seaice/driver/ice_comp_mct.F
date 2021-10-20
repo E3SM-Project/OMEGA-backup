@@ -2529,12 +2529,13 @@ contains
          if ( ailohi > 0.0_RKIND ) then
 
             !-------states-------------------- 
-            i2x_i % rAttr(index_i2x_Si_t     ,n)  = Tsrf
-            i2x_i % rAttr(index_i2x_Si_bpress,n)  = basalPressure
-            i2x_i % rAttr(index_i2x_Si_u10   ,n)  = atmosReferenceSpeed10m(i)
-            i2x_i % rAttr(index_i2x_Si_tref  ,n)  = atmosReferenceTemperature2m(i)
-            i2x_i % rAttr(index_i2x_Si_qref  ,n)  = atmosReferenceHumidity2m(i)
-            i2x_i % rAttr(index_i2x_Si_snowh ,n)  = snowVolumeCell(i) / ailohi
+            i2x_i % rAttr(index_i2x_Si_t      ,n) = Tsrf
+            i2x_i % rAttr(index_i2x_Si_bpress ,n) = basalPressure
+            i2x_i % rAttr(index_i2x_Si_u10    ,n) = atmosReferenceSpeed10m(i)
+            i2x_i % rAttr(index_i2x_Si_tref   ,n) = atmosReferenceTemperature2m(i)
+            i2x_i % rAttr(index_i2x_Si_qref   ,n) = atmosReferenceHumidity2m(i)
+            i2x_i % rAttr(index_i2x_Si_snowh  ,n) = snowVolumeCell(i) / ailohi
+            i2x_i % rAttr(index_i2x_Si_ithick ,n) = iceVolumeCell(i) / ailohi
 
             !--- a/i fluxes computed by ice
             i2x_i % rAttr(index_i2x_Faii_taux ,n) = tauxa
